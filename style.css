@@ -552,7 +552,7 @@ textarea:focus {
 
 .card-back .card-content {
     font-size: 1.2rem;
-    color: #e2e8f0;
+    color: var(--text-primary);
 }
 
 .flip-hint {
