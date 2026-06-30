@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Flash Cards | Auto-Deck Generator</title>
+    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- PDF.js for PDF parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 19V5C4 3.89543 4.89543 3 6 3H19.4C19.8319 3 20.1066 3.44754 19.9238 3.8443L18 8L19.9238 12.1557C20.1066 12.5525 19.8319 13 19.4 13H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6 13V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h1>Smart Study AI</h1>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="index.html" class="active">Flashcards</a>
+                <a href="sentiment.html">Focus & Sentiment</a>
+                <a href="coach.html">AI Coach</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="input-section glass-panel" id="inputSection">
+                <h2>Create Auto-Deck</h2>
+                <p class="subtitle">Paste your notes or upload a syllabus to generate flashcards instantly.</p>
+                
+                <div class="tabs">
+                    <button class="tab active" data-target="text-input">Text / Notes</button>
+                    <button class="tab" data-target="file-input">PDF Document</button>
+                </div>
+
+                <div class="tab-content active" id="text-input">
+                    <textarea id="notesArea" placeholder="Paste lecture notes, definitions, or task lists here..."></textarea>
+                </div>
+
+                <div class="tab-content" id="file-input">
+                    <div class="file-drop-zone" id="dropZone">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        <p>Drag & drop your PDF syllabus here</p>
+                        <span>or</span>
+                        <input type="file" id="pdfUpload" accept="application/pdf" hidden>
+                        <button class="btn-secondary" onclick="document.getElementById('pdfUpload').click()">Browse Files</button>
+                        <p id="fileNameDisplay" class="file-name"></p>
+                    </div>
+                </div>
+
+                <button id="generateBtn" class="btn-primary">
+                    <span class="btn-text">Generate Flashcards</span>
+                    <svg class="sparkle" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"></path><path d="M3 12h18"></path><path d="M19 5l-14 14"></path><path d="M5 5l14 14"></path></svg>
+                </button>
+            </div>
+
+            <div class="loading-section glass-panel hidden" id="loadingSection">
+                <div class="spinner"></div>
+                <h3>AI is analyzing your material...</h3>
+                <p>Extracting key definitions, formulas, and dates.</p>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            </div>
+
+            <div class="deck-section hidden" id="deckSection">
+                <div class="deck-header">
+                    <h2>Your Custom Deck</h2>
+                    <button id="newDeckBtn" class="btn-secondary small">Create Another</button>
+                </div>
+                
+                <div class="flashcard-container" id="flashcardContainer">
+                    <!-- Cards will be injected here -->
+                </div>
+
+                <div class="deck-controls">
+                    <button id="prevCardBtn" class="icon-btn" disabled>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    </button>
+                    <span id="cardCounter">1 / 10</span>
+                    <button id="nextCardBtn" class="icon-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </button>
+                </div>
+                
+                <p class="hint">Click the card or press Space to flip. Use arrows to navigate.</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js?v=12"></script>
+</body>
+</html>
