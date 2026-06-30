@@ -182,61 +182,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ===== AI Sort Button =====
-    const aiSortBtn = document.getElementById('aiSortBtn');
-    if (aiSortBtn) {
-        aiSortBtn.addEventListener('click', async () => {
-            const activeTasks = tasks.filter(t => !t.completed);
-            if (activeTasks.length < 2) {
-                alert("You need at least 2 active tasks to sort!");
-                return;
-            }
-            
-            aiSortBtn.disabled = true;
-            aiSortBtn.textContent = '✨ Sorting...';
-            
-            try {
-                // Create a simplified list for the AI
-                const taskString = activeTasks.map((t, idx) => `[${idx}] ${t.text} (Priority: ${t.priority})`).join('\\n');
-                
-                const prompt = `You are a productivity expert. Reorder the following tasks into the most optimal execution sequence (e.g., high priority or quick tasks first). Return ONLY a comma-separated list of the bracketed index numbers in the new order. Do not write any other text or explanation. Tasks:\\n${taskString}`;
-                
-                let modelToUse = localStorage.getItem('cached_gemini_model') || 'models/gemini-1.5-flash';
-                const response = await fetch(`/api/generateContent?model=${encodeURIComponent(modelToUse)}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: prompt })
-                });
-                
-                if (!response.ok) throw new Error("API request failed");
-                
-                const data = await response.json();
-                
-                // Parse indices from response like "2, 0, 1"
-                const newOrderIndices = data.text.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
-                
-                if (newOrderIndices.length === activeTasks.length) {
-                    // Rebuild tasks array
-                    const sortedActiveTasks = newOrderIndices.map(idx => activeTasks[idx]);
-                    const completedTasks = tasks.filter(t => t.completed);
-                    tasks = [...sortedActiveTasks, ...completedTasks];
-                    
-                    saveTasks();
-                    renderTasks();
-                } else {
-                    console.error("AI returned invalid order:", data.text);
-                    alert("AI sort failed to parse. Please try again.");
-                }
-                
-            } catch (err) {
-                console.error(err);
-                alert("Gemini API Error. Check your connection or API key.");
-            } finally {
-                aiSortBtn.disabled = false;
-                aiSortBtn.textContent = '✨ AI Sort';
-            }
-        });
-    }
+    // ===== Expose Tasks for AI Sentiment Integration =====
+    window.getTasks = function() {
+        return tasks;
+    };
+    
+    window.setTasks = function(newTasks) {
+        tasks = newTasks;
+        saveTasks();
+    };
+    
+    window.forceRenderTasks = function() {
+        renderTasks();
+    };
 
     // ===== Initial Render =====
     renderTasks();

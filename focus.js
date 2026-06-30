@@ -425,23 +425,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // ===== React to Sentiment / Reflection =====
     window.addEventListener('ReflectionSubmitted', (e) => {
         const state = e.detail?.state || '';
-        const negativeStates = ['Stressed', 'Distracted', 'Tired', 'Anxious', 'Bored'];
-        const positiveStates = ['Focused', 'Motivated', 'Happy', 'Calm'];
+        const actionPlan = e.detail?.actionPlan || '';
         
-        if (timerRunning) {
-            if (negativeStates.includes(state)) {
-                // Pause timer automatically
-                clearInterval(timerInterval);
-                timerRunning = false;
-                startTimerBtn.textContent = 'Resume';
-                setTimeout(() => showAlertModal("Timer Paused", "We paused your timer so you can take a breather."), 100);
-            } else if (positiveStates.includes(state)) {
-                // Add 5 minutes
-                timeLeft += 5 * 60;
-                totalTime += 5 * 60;
-                updateTimerDisplay();
-                setTimeout(() => showAlertModal("Zone Boost!", "Added 5 minutes to your focus block. Keep it up!"), 100);
-            }
+        clearInterval(timerInterval);
+        timerRunning = false;
+        startTimerBtn.textContent = 'Start';
+        
+        if (state === "Stressed") {
+            timeLeft = 15 * 60;
+            totalTime = 15 * 60;
+            timerLabel.innerText = "Gentle Focus (Stressed)";
+        } else if (state === "Distracted") {
+            timeLeft = 20 * 60;
+            totalTime = 20 * 60;
+            timerLabel.innerText = "Strict Pomodoro (Distracted)";
+        } else if (state === "Engaged" || state === "Motivated") {
+            timeLeft = 60 * 60;
+            totalTime = 60 * 60;
+            timerLabel.innerText = "Flow State (Engaged)";
+        } else {
+            timeLeft = 25 * 60;
+            totalTime = 25 * 60;
+            timerLabel.innerText = "Focus Time";
         }
+        
+        updateTimerDisplay();
+        setTimeout(() => showAlertModal(`AI Adjusted Timer: ${timerLabel.innerText}`, actionPlan || "Your timer and tasks have been adjusted."), 100);
     });
 });

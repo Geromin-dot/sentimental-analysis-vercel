@@ -25,19 +25,34 @@ document.getElementById('analyzeBtn').addEventListener('click', async () => {
 });
 
 async function analyzeSentiment(text) {
+    // 1. Fetch current tasks from window (exposed by command-center.js)
+    let currentTasks = [];
+    if (window.getTasks) {
+        currentTasks = window.getTasks().filter(t => !t.completed);
+    }
+    const taskListStr = currentTasks.map(t => `${t.id}: ${t.text} (Priority: ${t.priority})`).join('\n');
+
     const prompt = `
 You are an AI study coach analyzing a student's reflection journal entry.
 
 Student Reflection: "${text}"
 
-Your job is to do TWO things:
-1. Categorize the student's emotional state into EXACTLY ONE of the following four categories: Stressed, Distracted, Motivated, or Engaged. Analyze the underlying emotion based on their entry.
-2. Write a short, personalized 2-3 sentence insight and action plan explaining how they can adapt their study strategy right now to align with this state (e.g., suggesting a 15-minute gentle focus block for stress, or pushing for a deep 90-minute session if motivated).
+Current Tasks:
+${taskListStr || "No active tasks."}
+
+Your job is to do THREE things:
+1. Categorize the student's emotional state into EXACTLY ONE of the following four categories: Stressed, Distracted, Motivated, or Engaged. Analyze the underlying emotion.
+2. Determine the optimal order for the tasks based on their reflection. Use these default rules:
+   - Stressed: Quick Wins (Low effort/priority) first, High effort last.
+   - Distracted: Keep original order.
+   - Motivated/Engaged: High effort first, Quick Wins last.
+3. Write a short, personalized 1-2 sentence action plan explaining why you ordered the tasks this way and adjusted their timer.
 
 Reply STRICTLY in valid JSON format like this, do not use markdown blocks, just the JSON:
 {
-  "state": "Engaged",
-  "actionPlan": "Your personalized sentence here."
+  "state": "Stressed",
+  "orderedIds": [3, 1, 2],
+  "actionPlan": "I've moved your quick tasks to the top to build momentum and set a gentle 15-minute timer."
 }
 `;
 
@@ -94,6 +109,45 @@ Reply STRICTLY in valid JSON format like this, do not use markdown blocks, just 
     
     let state = parsed.state || "Engaged"; 
     let actionPlan = parsed.actionPlan || "Keep up the good work!";
+    let orderedIds = parsed.orderedIds || [];
+
+    // 2. Process Task Ordering
+    if (window.getTasks && window.setTasks && window.forceRenderTasks) {
+        const allTasks = window.getTasks();
+        const activeTasks = allTasks.filter(t => !t.completed);
+        const completedTasks = allTasks.filter(t => t.completed);
+        
+        let newActiveTasks = [];
+        if (orderedIds && orderedIds.length > 0) {
+            orderedIds.forEach(id => {
+                const task = activeTasks.find(t => t.id == id || t.id === id); 
+                if (task) newActiveTasks.push(task);
+            });
+            // Add any remaining active tasks that the AI missed
+            activeTasks.forEach(task => {
+                if (!newActiveTasks.includes(task)) newActiveTasks.push(task);
+            });
+        } else {
+            // Fallback to original order
+            newActiveTasks = [...activeTasks];
+        }
+        
+        // Rebuild and save
+        window.setTasks([...newActiveTasks, ...completedTasks]);
+        
+        // Animate the reorder
+        const taskListEl = document.getElementById('taskList');
+        if (taskListEl) {
+            taskListEl.style.opacity = '0';
+            setTimeout(() => {
+                window.forceRenderTasks();
+                taskListEl.style.transition = 'opacity 0.4s ease';
+                taskListEl.style.opacity = '1';
+            }, 200);
+        } else {
+            window.forceRenderTasks();
+        }
+    }
 
     applyIntervention(state, actionPlan);
     saveEntry(text, state, actionPlan);
@@ -152,7 +206,7 @@ function saveEntry(text, state, actionPlan) {
     document.getElementById('reflectionInput').value = '';
     
     // Dispatch event so the timer (focus.js) can react
-    window.dispatchEvent(new CustomEvent('ReflectionSubmitted', { detail: { state: state } }));
+    window.dispatchEvent(new CustomEvent('ReflectionSubmitted', { detail: { state: state, actionPlan: actionPlan } }));
 }
 
 function renderHistory() {
