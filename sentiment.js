@@ -150,10 +150,15 @@ function saveEntry(text, state, actionPlan) {
     localStorage.setItem('ifocus_journal_history', JSON.stringify(history));
     renderHistory();
     document.getElementById('reflectionInput').value = '';
+    
+    // Dispatch event so the timer (focus.js) can react
+    window.dispatchEvent(new CustomEvent('ReflectionSubmitted', { detail: { state: state } }));
 }
 
 function renderHistory() {
     const historyContainer = document.getElementById('journalHistory');
+    if (!historyContainer) return; // Prevent error on pages without history
+    
     const history = getHistory();
 
     if (history.length === 0) {

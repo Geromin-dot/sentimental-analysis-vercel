@@ -421,4 +421,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // ===== Initial Display =====
     updateTimerDisplay();
     updateSessionDots();
+    
+    // ===== React to Sentiment / Reflection =====
+    window.addEventListener('ReflectionSubmitted', (e) => {
+        const state = e.detail?.state || '';
+        const negativeStates = ['Stressed', 'Distracted', 'Tired', 'Anxious', 'Bored'];
+        const positiveStates = ['Focused', 'Motivated', 'Happy', 'Calm'];
+        
+        if (timerRunning) {
+            if (negativeStates.includes(state)) {
+                // Pause timer automatically
+                clearInterval(timerInterval);
+                timerRunning = false;
+                startTimerBtn.textContent = 'Resume';
+                setTimeout(() => showAlertModal("Timer Paused", "We paused your timer so you can take a breather."), 100);
+            } else if (positiveStates.includes(state)) {
+                // Add 5 minutes
+                timeLeft += 5 * 60;
+                totalTime += 5 * 60;
+                updateTimerDisplay();
+                setTimeout(() => showAlertModal("Zone Boost!", "Added 5 minutes to your focus block. Keep it up!"), 100);
+            }
+        }
+    });
 });

@@ -264,3 +264,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// ===== Past Entries Rendering =====
+function getJournalHistory() {
+    return JSON.parse(localStorage.getItem('ifocus_journal_history') || '[]');
+}
+
+function renderJournalHistory() {
+    const historyContainer = document.getElementById('journalHistory');
+    if (!historyContainer) return;
+    
+    const history = getJournalHistory();
+
+    if (history.length === 0) {
+        historyContainer.innerHTML = `
+            <div class="empty-state" style="padding: 2rem 1rem;">
+                <p>No journal entries yet.</p>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--text-secondary);">Your daily reflections will appear here.</p>
+            </div>
+        `;
+        return;
+    }
+
+    historyContainer.innerHTML = history.map((entry, idx) => `
+        <div class="journal-entry" style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; border: 1px solid var(--border-color);">
+            <div class="entry-date" style="font-size: 0.8rem; color: var(--success); margin-bottom: 0.5rem;">${new Date(entry.date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="entry-preview" style="color: var(--text-primary); font-size: 0.95rem;">${entry.text}</span>
+                <span class="state-badge state-${entry.state}" style="margin: 0; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.75rem; font-weight: 500; background: var(--bg-tertiary); color: var(--text-secondary);">${entry.state}</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    renderJournalHistory();
+});
+
