@@ -128,7 +128,7 @@ Return the output STRICTLY in valid JSON format like this. Do not use markdown b
         <div style="text-align: center;">
             <div class="metric-badge ${badgeClass}">${parsed.status}</div>
         </div>
-        <p style="color: white; font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;">"${parsed.message}"</p>
+        <p style="color: var(--text-primary); font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;">"${parsed.message}"</p>
         <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary-accent);">
             <strong style="color: var(--primary-accent); display: block; margin-bottom: 0.5rem;">💡 Coach's Tip:</strong>
             <span style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5;">${parsed.tip}</span>
