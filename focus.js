@@ -416,10 +416,9 @@ document.addEventListener('DOMContentLoaded', () => {
             let wSec = parseInt(customWorkSec.value) || 0;
             let bMin = parseInt(customBreakMin.value) || 0;
             let bSec = parseInt(customBreakSec.value) || 0;
-            let sessions = parseInt(customSessionsInput.value) || 4;
-            
-            if (wMin === 0 && wSec === 0) wMin = 25;
-            if (bMin === 0 && bSec === 0) bMin = 5;
+            let sessions = parseInt(customSessionsInput.value);
+            if (isNaN(sessions) || sessions <= 0) sessions = 1; // At least 1 session
+
 
             workDuration = (wMin * 60) + wSec;
             breakDuration = (bMin * 60) + bSec;
