@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const bgQuizState = document.getElementById('bgQuizState');
     const bgSkipBtn = document.getElementById('bgSkipBtn');
     
-    const bgDeckName = document.getElementById('bgDeckName');
+    const bgDeckSelect = document.getElementById('bgDeckSelect');
     const bgCardCounter = document.getElementById('bgCardCounter');
     const bgFlashcard = document.getElementById('bgFlashcard');
     const bgCardTag = document.getElementById('bgCardTag');
@@ -179,12 +179,32 @@ document.addEventListener('DOMContentLoaded', () => {
         bgNoDeckState.classList.add('hidden');
         bgQuizState.classList.remove('hidden');
         
-        // Grab the most recent deck
-        const activeDeck = collections[0];
-        bgDeckName.textContent = activeDeck.name;
+        // Populate select options
+        if (bgDeckSelect) {
+            bgDeckSelect.innerHTML = collections.map((col, idx) => 
+                `<option value="${idx}">${col.name}</option>`
+            ).join('');
+            
+            // Set up active deck
+            let activeIdx = bgDeckSelect.value || 0;
+            const activeDeck = collections[activeIdx];
+            
+            bgDeckSelect.onchange = () => {
+                const newIdx = bgDeckSelect.value;
+                loadBreakGateQuiz(collections[newIdx]);
+            };
+            
+            loadBreakGateQuiz(activeDeck);
+        } else {
+            loadBreakGateQuiz(collections[0]);
+        }
+    }
+    
+    function loadBreakGateQuiz(deck) {
+        if (!deck || !deck.cards) return;
         
         // Sort cards: prioritize ones with 'needsReview' flag
-        let cards = [...activeDeck.cards];
+        let cards = [...deck.cards];
         cards.sort((a, b) => {
             if (a.needsReview && !b.needsReview) return -1;
             if (!a.needsReview && b.needsReview) return 1;
@@ -222,7 +242,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!stored) return;
         const collections = JSON.parse(stored);
         if (collections.length > 0) {
-            const activeDeck = collections[0];
+            let activeIdx = bgDeckSelect ? bgDeckSelect.value : 0;
+            const activeDeck = collections[activeIdx];
+            if (!activeDeck) return;
             bgCurrentCards.forEach(quizCard => {
                 const match = activeDeck.cards.find(c => c.front === quizCard.front && c.back === quizCard.back);
                 if (match) {

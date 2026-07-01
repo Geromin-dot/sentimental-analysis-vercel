@@ -62,9 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         collectionsGrid.innerHTML = collections.map((col, idx) => `
-            <div class="collection-card" data-index="${idx}">
-                <button class="delete-collection" data-index="${idx}" title="Delete collection">&times;</button>
-                <h4>${col.name}</h4>
+            <div class="collection-card" data-index="${idx}" style="position: relative;">
+                <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 8px;">
+                    <button class="rename-collection" data-index="${idx}" title="Rename deck" style="background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-secondary);">&#9998;</button>
+                    <button class="delete-collection" data-index="${idx}" title="Delete deck" style="background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--error); line-height: 1;">&times;</button>
+                </div>
+                <h4 style="margin-right: 40px; word-break: break-word;">${col.name}</h4>
                 <span class="card-count">${col.cards.length} card${col.cards.length !== 1 ? 's' : ''}</span>
                 <p class="collection-date">${new Date(col.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
             </div>
@@ -73,9 +76,24 @@ document.addEventListener('DOMContentLoaded', () => {
         // Attach click events to open a collection
         collectionsGrid.querySelectorAll('.collection-card').forEach(card => {
             card.addEventListener('click', (e) => {
-                if (e.target.closest('.delete-collection')) return;
+                if (e.target.closest('.delete-collection') || e.target.closest('.rename-collection')) return;
                 const idx = Number(card.dataset.index);
                 openCollection(idx);
+            });
+        });
+
+        // Attach rename events
+        collectionsGrid.querySelectorAll('.rename-collection').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const idx = Number(btn.dataset.index);
+                const collections = getCollections();
+                const newName = prompt('Enter new name for the deck:', collections[idx].name);
+                if (newName && newName.trim() !== '') {
+                    collections[idx].name = newName.trim();
+                    saveCollections(collections);
+                    renderCollections();
+                }
             });
         });
 
