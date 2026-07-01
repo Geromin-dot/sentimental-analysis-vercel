@@ -70,6 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const avgFlight = flightTimes.reduce((a, b) => a + b, 0) / (flightTimes.length || 1);
         const backspaceRatio = backspaceCount / totalKeystrokes;
 
+        // Update Debug UI
+        const debugUI = document.getElementById('telemetryDebug');
+        if (debugUI) {
+            debugUI.textContent = `Flight: ${Math.round(avgFlight)}ms | Dwell: ${Math.round(avgDwell)}ms | BS: ${Math.round(backspaceRatio*100)}%`;
+        }
+
         // Anomaly logic
         let anomalyDetected = false;
         let anomalyReason = "";
@@ -77,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (backspaceRatio > 0.30) { 
             anomalyDetected = true;
             anomalyReason = "High deletion frequency detected. High backspace usage correlates strongly with cognitive friction, hesitation, or frustration.";
-        } else if (avgFlight < 120) { // Mashing the keyboard (fast bursts)
+        } else if (avgFlight < 150) { // Mashing the keyboard (fast bursts)
             anomalyDetected = true;
             anomalyReason = "Erratic typing cadence detected (Flight time: " + Math.round(avgFlight) + "ms). This hyper-velocity typing pattern suggests acute stress or agitation.";
         } else if (avgDwell > 250) { // Very heavy handed typing

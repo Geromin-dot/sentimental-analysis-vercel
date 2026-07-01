@@ -150,7 +150,10 @@
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                 <div class="glass-panel" style="flex: 1; display: flex; flex-direction: column;">
                     <h2>Quick Reflection</h2>
-                    <p class="subtitle" style="margin-bottom: 1rem;">Clear your mind. AI will analyze your entry.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem;">
+                        <p class="subtitle" style="margin-bottom: 0;">Clear your mind. AI will analyze your entry.</p>
+                        <span id="telemetryDebug" style="font-size: 0.75rem; color: var(--primary-accent); font-family: monospace;">Avg Flight: -- | Avg Dwell: --</span>
+                    </div>
                     
                     <textarea id="reflectionInput" class="journal-textarea" style="flex: 1; min-height: 150px; margin-bottom: 1rem;" placeholder="E.g., I have so much to read for biology and I keep getting distracted..."></textarea>
                     
