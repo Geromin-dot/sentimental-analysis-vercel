@@ -77,16 +77,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (backspaceRatio > 0.30) { 
             anomalyDetected = true;
             anomalyReason = "High deletion frequency detected. High backspace usage correlates strongly with cognitive friction, hesitation, or frustration.";
-        } else if (avgFlight < 60) { // Smashing the keyboard (multiple keys hit at once)
+        } else if (avgFlight < 120) { // Mashing the keyboard (fast bursts)
             anomalyDetected = true;
             anomalyReason = "Erratic typing cadence detected (Flight time: " + Math.round(avgFlight) + "ms). This hyper-velocity typing pattern suggests acute stress or agitation.";
-        } else if (avgDwell > 200) { // Very heavy handed typing
+        } else if (avgDwell > 250) { // Very heavy handed typing
             anomalyDetected = true;
             anomalyReason = "Heavy keystroke dwell time detected (" + Math.round(avgDwell) + "ms). Prolonged key-presses can indicate mental fatigue or a distracted cognitive state.";
         }
 
         if (anomalyDetected) {
             anomalyTriggered = true;
+            console.log("Telemetry Anomaly Triggered:", anomalyReason, { avgFlight, avgDwell, backspaceRatio });
             triggerTelemetryAlert(anomalyReason, avgDwell, avgFlight, backspaceRatio);
         }
     }
@@ -108,9 +109,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const toast = document.getElementById('telemetryToast');
         if (toast) {
             toast.classList.remove('hidden');
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 10);
+            toast.style.display = 'block'; // Force display just in case
+            
+            // Force browser reflow to ensure transition works
+            void toast.offsetWidth;
+            
+            toast.classList.add('show');
         }
     }
 });
