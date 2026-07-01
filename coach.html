@@ -45,50 +45,10 @@
                 <p class="subtitle" style="max-width: 600px; margin: 0 auto;">Simulate a study session to see how the AI provides data-driven interventions and personalized reinforcement based on your focus metrics.</p>
             </div>
 
-            <div class="coach-container">
-                <!-- Left Column: Simulator -->
-                <div class="glass-panel">
-                    <h3 style="margin-bottom: 1.5rem; font-size: 1.3rem;">Simulate Study Session</h3>
-                    
-                    <div class="slider-group">
-                        <label>
-                            <span>Total Focus Time</span>
-                            <span class="val-display"><span id="timeVal">25</span> mins</span>
-                        </label>
-                        <input type="range" id="timeSlider" min="5" max="120" value="25" step="5">
-                    </div>
-
-                    <div class="slider-group">
-                        <label>
-                            <span>Times Timer Was Paused (Distractions)</span>
-                            <span class="val-display"><span id="pauseVal">2</span> times</span>
-                        </label>
-                        <input type="range" id="pauseSlider" min="0" max="15" value="2" step="1">
-                    </div>
-
-                    <div class="slider-group">
-                        <label>
-                            <span>Tasks Completed</span>
-                            <span class="val-display"><span id="taskVal">1</span> task(s)</span>
-                        </label>
-                        <input type="range" id="taskSlider" min="0" max="10" value="1" step="1">
-                    </div>
-
-                    <div style="margin-top: 1.5rem; margin-bottom: 1rem;">
-                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Ask the Coach (Optional)</label>
-                        <textarea id="coachNote" placeholder="e.g. I struggled with math today, any tips?" style="width: 100%; height: 80px; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-surface); color: var(--text-primary); resize: none; font-family: inherit; font-size: 0.95rem;"></textarea>
-                    </div>
-
-                    <button id="coachBtn" class="btn-primary" style="margin-top: 1rem;">
-                        <span class="btn-text">Generate AI Coaching</span>
-                        <svg class="sparkle" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"></path><path d="M3 12h18"></path><path d="M19 5l-14 14"></path><path d="M5 5l14 14"></path></svg>
-                    </button>
-                </div>
-
-                <!-- Right Column: AI Output -->
-                <div class="glass-panel" style="text-align: center;">
-                    <div class="ai-avatar">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="coach-container" style="max-width: 800px; margin: 0 auto;">
+                <div class="glass-panel" style="text-align: center; margin-bottom: 2rem;">
+                    <div class="ai-avatar" style="margin: 0 auto 1rem auto; width: 60px; height: 60px;">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M12 2v2"></path>
                             <path d="M12 20v2"></path>
                             <path d="M4.93 4.93l1.41 1.41"></path>
@@ -99,10 +59,59 @@
                             <path d="M19.07 4.93l-1.41 1.41"></path>
                         </svg>
                     </div>
-                    <h3 style="font-size: 1.5rem;">Coaching Dashboard</h3>
-                    
-                    <div class="ai-response-box" id="coachOutput">
-                        <p style="color: var(--text-secondary); text-align: center; font-style: italic; margin-top: 3rem;">Adjust the sliders on the left and click "Generate" to receive personalized AI coaching based on your simulated session.</p>
+                    <h2 style="font-size: 2rem;">Behavioral Telemetry Insight</h2>
+                    <p class="subtitle" style="margin-bottom: 0;">The AI has analyzed your recent typing dynamics and interaction patterns.</p>
+                </div>
+
+                <div id="noInsightState" class="glass-panel" style="text-align: center; padding: 4rem 2rem;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem; opacity: 0.5;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <h3 style="color: var(--text-secondary);">No Anomalies Detected</h3>
+                    <p style="color: var(--text-secondary); max-width: 400px; margin: 0 auto;">Your recent keystroke dynamics and behavioral telemetry show a calm, consistent flow state. Keep up the good work!</p>
+                    <a href="command-center.html" class="btn-primary" style="display: inline-flex; text-decoration: none; margin-top: 1.5rem;">Return to Command Center</a>
+                </div>
+
+                <div id="insightState" class="hidden">
+                    <div class="glass-panel" style="margin-bottom: 1.5rem; border-color: var(--warning);">
+                        <h3 style="color: var(--warning); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                <line x1="12" y1="9" x2="12" y2="13"></line>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                            Anomaly Detected
+                        </h3>
+                        <p id="insightReason" style="font-size: 1.1rem; color: var(--text-primary); line-height: 1.6;"></p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                        <div class="glass-panel" style="padding: 1.5rem; text-align: center;">
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">Flight Time</p>
+                            <h3 id="flightTimeVal" style="font-size: 1.8rem; margin: 0; color: var(--text-primary);">--</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">ms / keystroke</p>
+                        </div>
+                        <div class="glass-panel" style="padding: 1.5rem; text-align: center;">
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">Dwell Time</p>
+                            <h3 id="dwellTimeVal" style="font-size: 1.8rem; margin: 0; color: var(--text-primary);">--</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">ms / keystroke</p>
+                        </div>
+                        <div class="glass-panel" style="padding: 1.5rem; text-align: center;">
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">Deletion Rate</p>
+                            <h3 id="errorRateVal" style="font-size: 1.8rem; margin: 0; color: var(--text-primary);">--</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">% of strokes</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel" style="background: rgba(95, 143, 94, 0.05);">
+                        <h3 style="margin-bottom: 1rem; color: var(--primary-accent);">Coach Recommendation</h3>
+                        <p id="coachRecommendation" style="line-height: 1.6;">Based on your typing dynamics, you appear to be experiencing high cognitive friction or stress. We recommend pausing your current task. Take a 5-minute deep breathing break away from the screen before attempting to refocus.</p>
+                        <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                            <a href="command-center.html" class="btn-primary" style="text-decoration: none;">Return to Home</a>
+                            <button id="clearInsightBtn" class="btn-secondary">Dismiss Insight</button>
+                        </div>
                     </div>
                 </div>
             </div>
