@@ -27,10 +27,26 @@ document.getElementById('analyzeBtn').addEventListener('click', async () => {
 async function analyzeSentiment(text) {
     // 1. Fetch current tasks from window (exposed by command-center.js)
     let currentTasks = [];
+    let completedTasksCount = 0;
     if (window.getTasks) {
-        currentTasks = window.getTasks().filter(t => !t.completed);
+        const allTasks = window.getTasks();
+        currentTasks = allTasks.filter(t => !t.completed);
+        completedTasksCount = allTasks.filter(t => t.completed).length;
     }
     const taskListStr = currentTasks.map(t => `${t.id}: ${t.text} (Priority: ${t.priority})`).join('\n');
+
+    // 1b. Fetch Telemetry Insight
+    let telemetryContext = "Typing Telemetry: Calm and focused (No cognitive friction detected).";
+    const storedTelemetry = localStorage.getItem('ifocus_telemetry_insight');
+    if (storedTelemetry) {
+        try {
+            const tel = JSON.parse(storedTelemetry);
+            const tenMinsAgo = Date.now() - (10 * 60 * 1000);
+            if (new Date(tel.timestamp).getTime() > tenMinsAgo) {
+                telemetryContext = `Typing Telemetry: Erratic. Flagged reason: ${tel.reason}`;
+            }
+        } catch(e) {}
+    }
 
     const prompt = `
 You are an AI study coach analyzing a student's reflection journal entry.
@@ -40,19 +56,26 @@ Student Reflection: "${text}"
 Current Tasks:
 ${taskListStr || "No active tasks."}
 
+Productivity Context:
+Student has completed ${completedTasksCount} tasks today.
+
+${telemetryContext}
+
 Your job is to do THREE things:
-1. Categorize the student's emotional state into EXACTLY ONE of the following four categories: Stressed, Distracted, Motivated, or Engaged. Analyze the underlying emotion.
+1. Categorize the student's emotional state into EXACTLY ONE of the following FIVE categories: Stressed, Distracted, Motivated, Engaged, or Contradiction.
+   - IMPORTANT ANTI-GAMING RULE: If the student explicitly claims they are Stressed, Unproductive, or Overwhelmed, BUT their Typing Telemetry is Calm AND they have completed tasks recently, you MUST classify their state as "Contradiction" (they are faking stress to avoid work).
 2. Determine the optimal order for the tasks based on their reflection. Use these default rules:
    - Stressed: Quick Wins (Low effort/priority) first, High effort last.
    - Distracted: Keep original order.
-   - Motivated/Engaged: High effort first, Quick Wins last.
+   - Motivated/Engaged/Contradiction: High effort first, Quick Wins last.
 3. Write a short, personalized 1-2 sentence action plan explaining why you ordered the tasks this way and adjusted their timer.
+   - If State is "Contradiction", gently call them out: "You mentioned feeling stressed, but your typing is perfectly calm and you've already crushed ${completedTasksCount} tasks. You're doing great, don't sell yourself short! Let's tackle a high-priority task with a standard 25-minute block."
 
 Reply STRICTLY in valid JSON format like this, do not use markdown blocks, just the JSON:
 {
-  "state": "Stressed",
+  "state": "Contradiction",
   "orderedIds": [3, 1, 2],
-  "actionPlan": "I've moved your quick tasks to the top to build momentum and set a gentle 15-minute timer."
+  "actionPlan": "You mentioned feeling stressed, but your typing is perfectly calm and you've already crushed 4 tasks. Let's tackle a high-priority task with a standard 25-minute block."
 }
 `;
 
@@ -178,6 +201,12 @@ function applyIntervention(state, actionPlan) {
         recommendation = `
             <div class="state-badge state-${state}">${state}</div>
             <h3 style="margin-bottom:12px; font-size: 1.3rem;">Flow State Detected</h3>
+            <p style="margin-bottom:20px; line-height: 1.6; color: var(--text-secondary);"><strong>Action suggested:</strong> ${actionPlan}</p>
+        `;
+    } else if (state === "Contradiction") {
+        recommendation = `
+            <div class="state-badge" style="background: var(--warning); color: #000;">Authenticity Alert</div>
+            <h3 style="margin-bottom:12px; font-size: 1.3rem;">Coach's Insight</h3>
             <p style="margin-bottom:20px; line-height: 1.6; color: var(--text-secondary);"><strong>Action suggested:</strong> ${actionPlan}</p>
         `;
     }
