@@ -135,6 +135,19 @@
         </main>
     </div>
 
+    <!-- Rename Modal -->
+    <div id="renameModal" class="modal-overlay hidden">
+        <div class="glass-panel modal-content" style="max-width: 400px; text-align: center;">
+            <h2 style="margin-bottom: 0.5rem;">Rename Deck</h2>
+            <p class="subtitle" style="margin-bottom: 1.5rem;">Enter a new name for your flashcard collection.</p>
+            <input type="text" id="renameInput" style="width: 100%; margin-bottom: 1.5rem; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-surface); font-size: 1rem;" autocomplete="off">
+            <div style="display: flex; gap: 1rem;">
+                <button id="cancelRenameBtn" class="btn-secondary" style="flex: 1;">Cancel</button>
+                <button id="saveRenameBtn" class="btn-primary" style="flex: 1;">Save</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js?v=20"></script>
 </body>
 </html>

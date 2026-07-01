@@ -63,15 +63,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         collectionsGrid.innerHTML = collections.map((col, idx) => `
             <div class="collection-card" data-index="${idx}" style="position: relative;">
-                <div style="position: absolute; top: 10px; right: 10px;">
-                    <button class="delete-collection" data-index="${idx}" title="Delete deck" style="background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--error); line-height: 1;">&times;</button>
+                <div class="collection-actions">
+                    <button class="action-btn rename-collection" data-index="${idx}" title="Rename deck">&#9998;</button>
+                    <button class="action-btn delete-collection" data-index="${idx}" title="Delete deck">&times;</button>
                 </div>
-                <h4 style="margin-right: 20px; word-break: break-word;">${col.name}</h4>
+                <h4 style="margin-right: 40px; word-break: break-word;">${col.name}</h4>
                 <span class="card-count">${col.cards.length} card${col.cards.length !== 1 ? 's' : ''}</span>
                 <p class="collection-date">${new Date(col.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
-                <div style="position: absolute; bottom: 10px; right: 10px;">
-                    <button class="rename-collection" data-index="${idx}" title="Rename deck" style="background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-secondary);">&#9998;</button>
-                </div>
             </div>
         `).join('');
 
@@ -90,11 +88,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.stopPropagation();
                 const idx = Number(btn.dataset.index);
                 const collections = getCollections();
-                const newName = prompt('Enter new name for the deck:', collections[idx].name);
-                if (newName && newName.trim() !== '') {
-                    collections[idx].name = newName.trim();
-                    saveCollections(collections);
-                    renderCollections();
+                
+                const renameModal = document.getElementById('renameModal');
+                const renameInput = document.getElementById('renameInput');
+                const saveRenameBtn = document.getElementById('saveRenameBtn');
+                const cancelRenameBtn = document.getElementById('cancelRenameBtn');
+                
+                if (renameModal && renameInput) {
+                    renameInput.value = collections[idx].name;
+                    renameModal.classList.remove('hidden');
+                    renameInput.focus();
+                    
+                    const closeModal = () => {
+                        renameModal.classList.add('hidden');
+                        saveRenameBtn.onclick = null;
+                        cancelRenameBtn.onclick = null;
+                    };
+                    
+                    cancelRenameBtn.onclick = closeModal;
+                    
+                    saveRenameBtn.onclick = () => {
+                        const newName = renameInput.value.trim();
+                        if (newName) {
+                            collections[idx].name = newName;
+                            saveCollections(collections);
+                            renderCollections();
+                        }
+                        closeModal();
+                    };
                 }
             });
         });

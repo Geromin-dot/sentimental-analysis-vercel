@@ -501,18 +501,18 @@ textarea:focus {
     align-items: center;
     justify-content: center;
     padding: 2rem;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .card-front {
-    background: var(--card-front);
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
 }
 
 .card-back {
-    background: var(--card-back);
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     transform: rotateX(180deg);
 }
 
@@ -645,13 +645,22 @@ textarea:focus {
     opacity: 0.7;
 }
 
-.collection-card .delete-collection {
+.collection-card .collection-actions {
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
-    background: rgba(239, 68, 68, 0.15);
+    display: flex;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: all 0.2s ease;
+}
+
+.collection-card:hover .collection-actions {
+    opacity: 1;
+}
+
+.collection-card .action-btn {
     border: none;
-    color: var(--error);
     width: 28px;
     height: 28px;
     border-radius: 50%;
@@ -659,15 +668,23 @@ textarea:focus {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    opacity: 0;
+    font-size: 1.1rem;
     transition: all 0.2s ease;
-    font-size: 1rem;
 }
 
-.collection-card:hover .delete-collection {
-    opacity: 1;
+.collection-card .rename-collection {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-secondary);
+}
+.collection-card .rename-collection:hover {
+    background: rgba(0, 0, 0, 0.15);
+    color: var(--text-primary);
 }
 
+.collection-card .delete-collection {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--error);
+}
 .collection-card .delete-collection:hover {
     background: rgba(239, 68, 68, 0.3);
 }
