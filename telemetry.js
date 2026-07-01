@@ -80,15 +80,18 @@ document.addEventListener('DOMContentLoaded', () => {
         let anomalyDetected = false;
         let anomalyReason = "";
 
-        if (backspaceRatio > 0.30) { 
+        if (backspaceRatio > 0.40) { 
             anomalyDetected = true;
-            anomalyReason = "High deletion frequency detected. High backspace usage correlates strongly with cognitive friction, hesitation, or frustration.";
-        } else if (avgFlight < 150) { // Mashing the keyboard (fast bursts)
+            anomalyReason = "High deletion frequency detected. More than 40% of your keystrokes were backspaces, which strongly correlates with cognitive friction or frustration.";
+        } else if (avgFlight < 60) { 
             anomalyDetected = true;
-            anomalyReason = "Erratic typing cadence detected (Flight time: " + Math.round(avgFlight) + "ms). This hyper-velocity typing pattern suggests acute stress or agitation.";
-        } else if (avgDwell > 250) { // Very heavy handed typing
+            anomalyReason = "Erratic typing cadence detected (Flight time: " + Math.round(avgFlight) + "ms). This hyper-velocity pattern indicates you are hitting multiple keys simultaneously, suggesting acute stress or agitation.";
+        } else if (avgFlight < 100 && backspaceRatio > 0.20) { 
             anomalyDetected = true;
-            anomalyReason = "Heavy keystroke dwell time detected (" + Math.round(avgDwell) + "ms). Prolonged key-presses can indicate mental fatigue or a distracted cognitive state.";
+            anomalyReason = "Rushed, error-prone typing detected. A combination of very fast typing (Flight time: " + Math.round(avgFlight) + "ms) and high correction rate suggests you might be feeling overwhelmed.";
+        } else if (avgDwell > 350) { 
+            anomalyDetected = true;
+            anomalyReason = "Heavy keystroke dwell time detected (" + Math.round(avgDwell) + "ms). Prolonged key-presses indicate hesitation, mental fatigue, or a distracted cognitive state.";
         }
 
         if (anomalyDetected) {
