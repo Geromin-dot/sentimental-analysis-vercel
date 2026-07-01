@@ -99,8 +99,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Save to analytics history
                     saveSessionToHistory(workDuration / 60);
 
+                    // --- NEW BURNOUT CHECK ---
+                    let completedTasks = 0;
+                    if (window.getTasks) {
+                        completedTasks = window.getTasks().filter(t => t.completed).length;
+                    }
+
+                    const isBurnout = completedTasks === 0 && (workDuration >= 1500 || workDuration < 10);
+                    if (isBurnout) {
+                        setTimeout(() => {
+                            showAlertModal(
+                                "⚠️ Proactive Burnout Intervention", 
+                                "You just spent a long time focusing but haven't checked off any tasks yet. Are you feeling stuck? Take a deep breath, step away from the screen for a full 10 minutes, and let's break your tasks down into smaller steps when you return."
+                            );
+                        }, 200);
+                        breakDuration = 10 * 60; // Force 10 minute recovery break
+                    }
+                    // ------------------------
+
                     if (completedSessions >= totalSessions) {
-                        showAlertModal("Great Work!", "All sessions completed!");
+                        if (!isBurnout) {
+                            showAlertModal("Great Work!", "All sessions completed!");
+                        }
                         completedSessions = 0;
                         currentSession = 1;
                         updateSessionDots();
