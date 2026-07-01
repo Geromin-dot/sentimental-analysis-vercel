@@ -203,8 +203,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadBreakGateQuiz(deck) {
         if (!deck || !deck.cards) return;
         
-        // Sort cards: prioritize ones with 'needsReview' flag
+        // First, randomly shuffle all cards
         let cards = [...deck.cards];
+        for (let i = cards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [cards[i], cards[j]] = [cards[j], cards[i]];
+        }
+        
+        // Then sort to prioritize ones with 'needsReview' flag
         cards.sort((a, b) => {
             if (a.needsReview && !b.needsReview) return -1;
             if (!a.needsReview && b.needsReview) return 1;
