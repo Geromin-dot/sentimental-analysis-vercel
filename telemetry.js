@@ -46,14 +46,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const dwell = now - keydownTimes[e.code];
             if (dwell > 0 && dwell < 2000) { // filter out extreme outliers (e.g., leaving desk)
                 dwellTimes.push(dwell);
+                if (dwellTimes.length > 20) dwellTimes.shift(); // Rolling window
             }
             delete keydownTimes[e.code];
         }
 
         if (lastKeyupTime) {
             const flight = now - lastKeyupTime;
-            if (flight > 0 && flight < 2000) {
+            if (flight >= 0 && flight < 2000) {
                 flightTimes.push(flight);
+                if (flightTimes.length > 20) flightTimes.shift(); // Rolling window
             }
         }
         
@@ -61,24 +63,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function checkAnomalies() {
-        if (totalKeystrokes < 15) return; // Need a baseline
+        if (totalKeystrokes < 10) return; // Need a smaller baseline
 
-        // Calculate averages
+        // Calculate averages over the rolling window
         const avgDwell = dwellTimes.reduce((a, b) => a + b, 0) / (dwellTimes.length || 1);
         const avgFlight = flightTimes.reduce((a, b) => a + b, 0) / (flightTimes.length || 1);
         const backspaceRatio = backspaceCount / totalKeystrokes;
 
-        // Anomaly logic: High backspace ratio OR extremely short flight times (smashing keys) combined with long dwells
+        // Anomaly logic
         let anomalyDetected = false;
         let anomalyReason = "";
 
-        if (backspaceRatio > 0.25) { // 25% of keystrokes are backspaces
+        if (backspaceRatio > 0.30) { 
             anomalyDetected = true;
             anomalyReason = "High deletion frequency detected. High backspace usage correlates strongly with cognitive friction, hesitation, or frustration.";
-        } else if (avgFlight < 40 && backspaceRatio > 0.1) { // Very fast, erratic typing with errors
+        } else if (avgFlight < 60) { // Smashing the keyboard (multiple keys hit at once)
             anomalyDetected = true;
-            anomalyReason = "Erratic typing cadence detected (Flight time: " + Math.round(avgFlight) + "ms). This hyper-velocity typing pattern combined with corrections suggests acute stress or agitation.";
-        } else if (avgDwell > 150) { // Heavy handed typing
+            anomalyReason = "Erratic typing cadence detected (Flight time: " + Math.round(avgFlight) + "ms). This hyper-velocity typing pattern suggests acute stress or agitation.";
+        } else if (avgDwell > 200) { // Very heavy handed typing
             anomalyDetected = true;
             anomalyReason = "Heavy keystroke dwell time detected (" + Math.round(avgDwell) + "ms). Prolonged key-presses can indicate mental fatigue or a distracted cognitive state.";
         }
