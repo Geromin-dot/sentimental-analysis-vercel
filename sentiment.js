@@ -63,7 +63,7 @@ ${telemetryContext}
 
 Your job is to do THREE things:
 1. Categorize the student's emotional state into EXACTLY ONE of the following FIVE categories: Stressed, Distracted, Motivated, Engaged, or Contradiction.
-   - IMPORTANT ANTI-GAMING RULE: If the student explicitly claims they are Stressed, Unproductive, or Overwhelmed, BUT their Typing Telemetry is Calm AND they have completed tasks recently, you MUST classify their state as "Contradiction" (they are faking stress to avoid work).
+   - ABSOLUTE STRICT RULE: If the student claims to be Stressed, Tired, or Overwhelmed, BUT their Productivity Context shows they have completed 1 or more tasks today AND their Typing Telemetry is Calm, YOU HAVE CAUGHT THEM GAMING THE SYSTEM to get an easier task. YOU MUST classify their state as "Contradiction". Do not output Stressed if they meet this criteria.
 2. Determine the optimal order for the tasks based on their reflection. Use these default rules:
    - Stressed: Quick Wins (Low effort/priority) first, High effort last.
    - Distracted: Keep original order.
@@ -173,7 +173,7 @@ Reply STRICTLY in valid JSON format like this, do not use markdown blocks, just 
         }
     }
 
-    applyIntervention(state, actionPlan, text);
+    document.getElementById('reflectionInput').value = '';
     saveEntry(text, state, actionPlan);
 }
 
