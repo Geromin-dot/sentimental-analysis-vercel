@@ -171,4 +171,40 @@ document.addEventListener('DOMContentLoaded', () => {
             toast.classList.add('show');
         }
     }
+
+    // ===== Proactive Burnout / Inactivity Intervention (Demonstration 4) =====
+    let idleTimer = null;
+    const IDLE_TIMEOUT_MS = 15000; // 15 seconds for testing/demonstration
+
+    function resetIdleTimer() {
+        if (anomalyTriggered) return;
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => {
+            if (anomalyTriggered) return;
+            anomalyTriggered = true;
+            const anomalyReason = "Inactivity detected. Student appears paralyzed, stuck, or distracted without interacting.";
+            console.log("Telemetry Anomaly Triggered:", anomalyReason);
+            
+            // Re-use the alert system to proactively reach out
+            triggerTelemetryAlert(anomalyReason, 0, 0, 0);
+            
+            // Optionally update the toast text to be specific to inactivity
+            const toast = document.getElementById('telemetryToast');
+            if (toast) {
+                const body = toast.querySelector('.toast-body');
+                if (body) {
+                    body.textContent = "You've been idle for a while. Are you feeling stuck on a task? Let the AI coach help you break it down.";
+                }
+            }
+        }, IDLE_TIMEOUT_MS);
+    }
+
+    // Reset idle timer on any general page interaction
+    document.addEventListener('mousemove', resetIdleTimer);
+    document.addEventListener('keydown', resetIdleTimer);
+    document.addEventListener('click', resetIdleTimer);
+    
+    // Start the timer initially
+    resetIdleTimer();
+
 });
