@@ -103,9 +103,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let anomalyDetected = false;
         let anomalyReason = "";
 
-        if (backspaceRatio > 0.25) { 
+        if (backspaceRatio > 0.15) { 
             anomalyDetected = true;
-            anomalyReason = "High deletion frequency detected. More than 25% of your keystrokes were backspaces, which strongly correlates with cognitive friction or frustration.";
+            anomalyReason = "High deletion frequency detected. More than 15% of your keystrokes were backspaces, which strongly correlates with cognitive friction or frustration.";
         } else if (avgFlight < 60) { 
             anomalyDetected = true;
             anomalyReason = "Erratic typing cadence detected (Flight time: " + Math.round(avgFlight) + "ms). This hyper-velocity pattern indicates you are hitting multiple keys simultaneously, suggesting acute stress or agitation.";
