@@ -271,9 +271,26 @@ window.viewPastEntry = function(index) {
     const entry = history[index];
     if (!entry) return;
 
-    document.getElementById('reflectionInput').value = entry.text;
-    applyIntervention(entry.state, entry.actionPlan);
+    const modal = document.getElementById('pastEntryModal');
+    if (!modal) return;
+
+    document.getElementById('pastEntryDate').textContent = new Date(entry.date).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+    document.getElementById('pastEntryText').textContent = `"${entry.text}"`;
     
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    let recommendation = "";
+    const state = entry.state;
+    const actionPlan = entry.actionPlan;
+
+    if (state === "Stressed") {
+        recommendation = `<div class="state-badge state-Stressed">Stressed / Overwhelmed</div><p style="margin-top:1rem; line-height: 1.5; color: var(--text-secondary);"><strong>Coach's Insight:</strong> ${actionPlan}</p>`;
+    } else if (state === "Distracted") {
+        recommendation = `<div class="state-badge state-Distracted">Distracted</div><p style="margin-top:1rem; line-height: 1.5; color: var(--text-secondary);"><strong>Coach's Insight:</strong> ${actionPlan}</p>`;
+    } else if (state === "Engaged" || state === "Motivated") {
+        recommendation = `<div class="state-badge state-${state}">${state}</div><p style="margin-top:1rem; line-height: 1.5; color: var(--text-secondary);"><strong>Flow State Detected:</strong> ${actionPlan}</p>`;
+    } else if (state === "Contradiction") {
+        recommendation = `<div class="state-badge" style="background: var(--warning); color: #000;">Authenticity Alert</div><p style="margin-top:1rem; line-height: 1.5; color: var(--text-secondary);"><strong>Coach's Insight:</strong> ${actionPlan}</p>`;
+    }
+
+    document.getElementById('pastEntryInsight').innerHTML = recommendation;
+    modal.classList.remove('hidden');
 };
