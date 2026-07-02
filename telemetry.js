@@ -20,24 +20,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Real-Time Text Analysis for Profanity/Frustration
     const profanityList = ['fuck', 'shit', 'bitch', 'asshole', 'damn', 'stupid', 'hate'];
+    const anxietyList = ['worried', 'anxious', 'scared', 'terrified', 'overwhelmed', 'nervous', 'failing'];
 
     inputField.addEventListener('input', (e) => {
         if (anomalyTriggered) return;
         const text = e.target.value.toLowerCase();
         
+        let triggerWord = null;
+        let isProfanity = false;
+
         for (let word of profanityList) {
             if (text.includes(word)) {
-                anomalyTriggered = true;
-                const anomalyReason = `Profanity/Frustration detected ("${word}"). Cursing is a strong indicator of emotional flooding.`;
-                console.log("Telemetry Anomaly Triggered:", anomalyReason);
-                
-                const avgDwell = dwellTimes.length ? dwellTimes.reduce((a, b) => a + b, 0) / dwellTimes.length : 0;
-                const avgFlight = flightTimes.length ? flightTimes.reduce((a, b) => a + b, 0) / flightTimes.length : 0;
-                const backspaceRatio = totalKeystrokes > 0 ? backspaceCount / totalKeystrokes : 0;
-                
-                triggerTelemetryAlert(anomalyReason, avgDwell, avgFlight, backspaceRatio);
+                triggerWord = word;
+                isProfanity = true;
                 break;
             }
+        }
+
+        if (!triggerWord) {
+            for (let word of anxietyList) {
+                if (text.includes(word)) {
+                    triggerWord = word;
+                    isProfanity = false;
+                    break;
+                }
+            }
+        }
+
+        if (triggerWord) {
+            anomalyTriggered = true;
+            let anomalyReason = isProfanity 
+                ? `Frustration detected ("${triggerWord}"). Cursing indicates emotional flooding.`
+                : `Anxiety detected ("${triggerWord}"). User is expressing genuine fear or worry.`;
+
+            console.log("Telemetry Anomaly Triggered:", anomalyReason);
+            
+            const avgDwell = dwellTimes.length ? dwellTimes.reduce((a, b) => a + b, 0) / dwellTimes.length : 0;
+            const avgFlight = flightTimes.length ? flightTimes.reduce((a, b) => a + b, 0) / flightTimes.length : 0;
+            const backspaceRatio = totalKeystrokes > 0 ? backspaceCount / totalKeystrokes : 0;
+            
+            triggerTelemetryAlert(anomalyReason, avgDwell, avgFlight, backspaceRatio);
         }
     });
 

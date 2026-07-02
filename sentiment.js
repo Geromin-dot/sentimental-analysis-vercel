@@ -63,8 +63,8 @@ ${telemetryContext}
 
 Your job is to do THREE things:
 1. Categorize the student's emotional state into EXACTLY ONE of the following FIVE categories: Stressed, Distracted, Motivated, Engaged, or Contradiction.
-   - ABSOLUTE STRICT RULE: If the student claims to be Stressed, Tired, or Overwhelmed, BUT their Productivity Context shows they have completed 1 or more tasks today AND their Typing Telemetry is Calm, YOU HAVE CAUGHT THEM GAMING THE SYSTEM to get an easier task. YOU MUST classify their state as "Contradiction". Do not output Stressed if they meet this criteria.
-   - HOWEVER, if their Typing Telemetry is "Erratic", you MUST believe they are genuinely stressed and classify their state as "Stressed".
+   - ABSOLUTE STRICT RULE: If the student claims to be simply "Tired", "Lazy", or "Unproductive" to get out of work, BUT their Productivity Context shows they have completed 1 or more tasks today AND their Typing Telemetry is Calm, YOU HAVE CAUGHT THEM GAMING THE SYSTEM. YOU MUST classify their state as "Contradiction".
+   - HOWEVER, if they are expressing genuine anxiety/fear about a specific subject (like a Math exam), OR if their Typing Telemetry is "Erratic", you MUST believe they are genuinely stressed and classify their state as "Stressed", regardless of their completed tasks.
 2. Determine the optimal order for the tasks based on their reflection. Use these default rules:
    - Stressed: Quick Wins (Low effort/priority) first, High effort last.
    - Distracted: Keep original order.
