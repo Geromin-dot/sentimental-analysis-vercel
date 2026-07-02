@@ -66,6 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
     inputField.addEventListener('keydown', (e) => {
         if (anomalyTriggered) return;
 
+        // Ignore modifier keys to prevent artificial 0ms flight times
+        const ignoredKeys = ['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab'];
+        if (ignoredKeys.includes(e.key)) return;
+
         const now = performance.now();
         
         // Don't track if they hold down a key (autorepeat)
@@ -84,6 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     inputField.addEventListener('keyup', (e) => {
         if (anomalyTriggered) return;
+
+        const ignoredKeys = ['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab'];
+        if (ignoredKeys.includes(e.key)) return;
 
         const now = performance.now();
         
@@ -206,5 +213,17 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Start the timer initially
     resetIdleTimer();
+
+    // ===== Expose Reset Method for Journal Submission =====
+    window.resetTelemetry = function() {
+        anomalyTriggered = false;
+        totalKeystrokes = 0;
+        backspaceCount = 0;
+        flightTimes = [];
+        dwellTimes = [];
+        keydownTimes = {};
+        lastKeyupTime = null;
+        resetIdleTimer();
+    };
 
 });

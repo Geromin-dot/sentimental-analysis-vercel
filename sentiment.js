@@ -176,6 +176,7 @@ Reply STRICTLY in valid JSON format like this, do not use markdown blocks, just 
 
     document.getElementById('reflectionInput').value = '';
     localStorage.removeItem('ifocus_telemetry_insight');
+    if (window.resetTelemetry) window.resetTelemetry();
     saveEntry(text, state, actionPlan);
 }
 
