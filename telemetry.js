@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===== Proactive Burnout / Inactivity Intervention (Demonstration 4) =====
     let idleTimer = null;
-    const IDLE_TIMEOUT_MS = 15000; // 15 seconds for testing/demonstration
+    const IDLE_TIMEOUT_MS = 60000; // 1 minute for demonstration
 
     function resetIdleTimer() {
         if (anomalyTriggered) return;
