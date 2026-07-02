@@ -127,7 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.removeEventListener('beforeunload', exitPromptHandler);
                     } else {
                         // Switch to break
-                        initBreakGate();
+                        if (isBurnout) {
+                            startBreakSession();
+                        } else {
+                            initBreakGate();
+                        }
                     }
                 } else {
                     // Break completed
