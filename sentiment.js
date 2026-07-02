@@ -89,9 +89,9 @@ Reply STRICTLY in valid JSON format like this, do not use markdown blocks, just 
         })
     });
 
-    // If 404, try to auto-discover a working model
-    if (response.status === 404) {
-        console.log("Model not found. Auto-discovering available models...");
+    // If 404 (not found) or 503 (overloaded), try to auto-discover a working model
+    if (response.status === 404 || response.status === 503) {
+        console.log(`Model ${modelToUse} failed with ${response.status}. Auto-discovering alternative models...`);
         const modelsRes = await fetch(`/api/models`);
         if (modelsRes.ok) {
             const modelsData = await modelsRes.json();
@@ -99,12 +99,13 @@ Reply STRICTLY in valid JSON format like this, do not use markdown blocks, just 
             const validModel = availableModels.find(m => 
                 m.supportedGenerationMethods && 
                 m.supportedGenerationMethods.includes('generateContent') && 
-                m.name.includes('gemini')
+                m.name.includes('gemini') &&
+                m.name !== modelToUse
             );
             if (validModel) {
                 modelToUse = validModel.name;
                 localStorage.setItem('cached_gemini_model', modelToUse);
-                console.log("Retrying with model:", modelToUse);
+                console.log("Retrying with alternative model:", modelToUse);
                 response = await fetch(`/api/generateContent?model=${encodeURIComponent(modelToUse)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
