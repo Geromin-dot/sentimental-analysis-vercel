@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (isBurnout) {
                         setTimeout(() => {
                             showAlertModal(
-                                "⚠️ Proactive Burnout Intervention", 
+                                "Proactive Burnout Intervention", 
                                 "You just spent a long time focusing but haven't checked off any tasks yet. Are you feeling stuck? Take a deep breath, step away from the screen for a full 10 minutes, and let's break your tasks down into smaller steps when you return."
                             );
                         }, 200);
