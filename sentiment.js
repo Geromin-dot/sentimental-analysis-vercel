@@ -68,7 +68,7 @@ Your job is to do THREE things:
    - Stressed: Quick Wins (Low effort/priority) first, High effort last.
    - Distracted: Keep original order.
    - Motivated/Engaged/Contradiction: High effort first, Quick Wins last.
-3. Write a short, personalized 1-2 sentence action plan explaining why you ordered the tasks this way and adjusted their timer.
+3. Write a thoughtful, personalized 2-3 sentence action plan. DO NOT just talk about task ordering or pomodoro timers. Give them GENUINE, highly specific psychological advice, cognitive behavioral strategies, or study techniques tailored to the EXACT subject or worry they mentioned (e.g., if they mention Math, give a real math-anxiety tip; if they mention exhaustion, give a real burnout tip).
    - If State is "Contradiction", gently call them out: "You mentioned feeling stressed, but your typing is perfectly calm and you've already crushed ${completedTasksCount} tasks. You're doing great, don't sell yourself short! Let's tackle a high-priority task with a standard 25-minute block."
 
 Reply STRICTLY in valid JSON format like this, do not use markdown blocks, just the JSON:
@@ -173,19 +173,23 @@ Reply STRICTLY in valid JSON format like this, do not use markdown blocks, just 
         }
     }
 
-    applyIntervention(state, actionPlan);
+    applyIntervention(state, actionPlan, text);
     saveEntry(text, state, actionPlan);
 }
 
-function applyIntervention(state, actionPlan) {
-    const section = document.getElementById('interventionSection');
-    const content = document.getElementById('interventionContent');
+function applyIntervention(state, actionPlan, text = "") {
+    const modal = document.getElementById('pastEntryModal');
+    if (!modal) return;
     
-    section.classList.remove('hidden');
+    // Clear the input box since we just submitted successfully
+    if (text) {
+        document.getElementById('reflectionInput').value = '';
+    }
+
+    document.getElementById('pastEntryDate').textContent = "Just now";
+    document.getElementById('pastEntryText').textContent = `"${text}"`;
     
     let recommendation = "";
-    let stateLabel = state;
-
     if (state === "Stressed") {
         recommendation = `
             <div class="state-badge state-Stressed">Stressed / Overwhelmed</div>
@@ -212,7 +216,8 @@ function applyIntervention(state, actionPlan) {
         `;
     }
 
-    content.innerHTML = recommendation;
+    document.getElementById('pastEntryInsight').innerHTML = recommendation;
+    modal.classList.remove('hidden');
 }
 
 // ===== Journal History Logic =====
