@@ -18,6 +18,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let anomalyTriggered = false;
 
+    // Real-Time Text Analysis for Profanity/Frustration
+    const profanityList = ['fuck', 'shit', 'bitch', 'asshole', 'damn', 'stupid', 'hate'];
+
+    inputField.addEventListener('input', (e) => {
+        if (anomalyTriggered) return;
+        const text = e.target.value.toLowerCase();
+        
+        for (let word of profanityList) {
+            if (text.includes(word)) {
+                anomalyTriggered = true;
+                const anomalyReason = `Profanity/Frustration detected ("${word}"). Cursing is a strong indicator of emotional flooding.`;
+                console.log("Telemetry Anomaly Triggered:", anomalyReason);
+                
+                const avgDwell = dwellTimes.length ? dwellTimes.reduce((a, b) => a + b, 0) / dwellTimes.length : 0;
+                const avgFlight = flightTimes.length ? flightTimes.reduce((a, b) => a + b, 0) / flightTimes.length : 0;
+                const backspaceRatio = totalKeystrokes > 0 ? backspaceCount / totalKeystrokes : 0;
+                
+                triggerTelemetryAlert(anomalyReason, avgDwell, avgFlight, backspaceRatio);
+                break;
+            }
+        }
+    });
+
     inputField.addEventListener('keydown', (e) => {
         if (anomalyTriggered) return;
 
