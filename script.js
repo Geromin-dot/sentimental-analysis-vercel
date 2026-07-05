@@ -62,23 +62,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         collectionsGrid.innerHTML = collections.map((col, idx) => `
-            <div class="collection-card" data-index="${idx}" style="position: relative;">
+            <div class="collection-card" data-index="${idx}" style="position: relative; border: ${col.activated ? '2px solid var(--primary-accent)' : '1px solid var(--glass-border)'}">
                 <div class="collection-actions">
                     <button class="action-btn rename-collection" data-index="${idx}" title="Rename deck">&#9998;</button>
                     <button class="action-btn delete-collection" data-index="${idx}" title="Delete deck">&times;</button>
                 </div>
                 <h4 style="margin-right: 40px; word-break: break-word;">${col.name}</h4>
                 <span class="card-count">${col.cards.length} card${col.cards.length !== 1 ? 's' : ''}</span>
-                <p class="collection-date">${new Date(col.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                <p class="collection-date" style="margin-bottom: 1rem;">${new Date(col.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                <button class="btn-secondary small toggle-active-btn" data-index="${idx}" style="width: 100%; margin: 0; background: ${col.activated ? 'var(--primary-accent)' : 'var(--bg-surface)'}; color: ${col.activated ? 'white' : 'var(--text-primary)'}; border-color: ${col.activated ? 'var(--primary-accent)' : 'var(--glass-border)'};">
+                    ${col.activated ? 'Activated ✓' : 'Activate for Vault'}
+                </button>
             </div>
         `).join('');
 
         // Attach click events to open a collection
         collectionsGrid.querySelectorAll('.collection-card').forEach(card => {
             card.addEventListener('click', (e) => {
-                if (e.target.closest('.delete-collection') || e.target.closest('.rename-collection')) return;
+                if (e.target.closest('.delete-collection') || e.target.closest('.rename-collection') || e.target.closest('.toggle-active-btn')) return;
                 const idx = Number(card.dataset.index);
                 openCollection(idx);
+            });
+        });
+
+        // Attach toggle active events
+        collectionsGrid.querySelectorAll('.toggle-active-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const idx = Number(btn.dataset.index);
+                const collections = getCollections();
+                collections[idx].activated = !collections[idx].activated;
+                saveCollections(collections);
+                renderCollections();
             });
         });
 

@@ -192,7 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Load collections
         const stored = localStorage.getItem('ifocus_flashcard_collections');
-        const collections = stored ? JSON.parse(stored) : [];
+        const allCollections = stored ? JSON.parse(stored) : [];
+        const collections = allCollections.filter(c => c.activated);
         
         if (collections.length === 0 || !collections[0].cards || collections[0].cards.length === 0) {
             bgNoDeckState.classList.remove('hidden');
