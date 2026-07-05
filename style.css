@@ -150,7 +150,7 @@ header {
     position: sticky;
     top: 0;
     flex-shrink: 0;
-    background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
+    background: linear-gradient(180deg, var(--primary-accent), var(--primary-hover));
     padding: 2rem 1.75rem;
     box-sizing: border-box;
     border-right: none;
@@ -233,12 +233,15 @@ header {
 }
 
 .sidebar-bottom a.logout {
-    color: #ffb3b3;
+    color: #ffffff;
+    background: rgba(224, 62, 62, 0.2);
+    border: 1px solid rgba(224, 62, 62, 0.3);
 }
 
 .sidebar-bottom a.logout:hover {
-    background: rgba(224, 62, 62, 0.2);
-    color: #ffcccc;
+    background: rgba(224, 62, 62, 0.8);
+    border-color: rgba(224, 62, 62, 1);
+    color: #ffffff;
 }
 
 main {
