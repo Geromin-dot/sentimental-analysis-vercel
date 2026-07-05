@@ -61,14 +61,22 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        collectionsGrid.innerHTML = collections.map((col, idx) => `
+        collectionsGrid.innerHTML = collections.map((col, idx) => {
+            const total = col.cards.length;
+            const mastered = col.cards.filter(c => c.needsReview === false).length;
+            const percentage = total > 0 ? Math.round((mastered / total) * 100) : 0;
+            
+            return `
             <div class="collection-card" data-index="${idx}" style="position: relative; border: ${col.activated ? '2px solid var(--primary-accent)' : '1px solid var(--glass-border)'}">
                 <div class="collection-actions">
                     <button class="action-btn rename-collection" data-index="${idx}" title="Rename deck">&#9998;</button>
                     <button class="action-btn delete-collection" data-index="${idx}" title="Delete deck">&times;</button>
                 </div>
-                <h4 style="margin-right: 40px; word-break: break-word;">${col.name}</h4>
-                <span class="card-count">${col.cards.length} card${col.cards.length !== 1 ? 's' : ''}</span>
+                <h4 style="margin-right: 40px; word-break: break-word; margin-bottom: 0.5rem;">${col.name}</h4>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span class="card-count" style="margin-bottom: 0;">${total} card${total !== 1 ? 's' : ''}</span>
+                    ${total > 0 ? `<span style="font-size: 0.75rem; font-weight: 600; color: ${percentage >= 80 ? '#4CAF50' : (percentage >= 50 ? '#FF9800' : 'var(--text-secondary)')}; background: rgba(0,0,0,0.04); padding: 2px 8px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">${percentage}% Mastered</span>` : ''}
+                </div>
                 <p class="collection-date" style="margin-bottom: 1rem;">${new Date(col.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                 <button class="btn-primary small study-collection-btn" data-index="${idx}" style="width: 100%; margin-bottom: 0.5rem;">
                     Study Deck
@@ -78,7 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="hover-text">Disable</span>
                 </button>
             </div>
-        `).join('');
+            `;
+        }).join('');
 
         // Attach click events to open a collection
         collectionsGrid.querySelectorAll('.collection-card').forEach(card => {
