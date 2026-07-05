@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     let recentCompletedTasks = 0;
                     if (window.getTasks) {
                         const now = Date.now();
-                        recentCompletedTasks = window.getTasks().filter(t => t.completed && t.completedAt && (now - t.completedAt < 60 * 60 * 1000)).length;
+                        recentCompletedTasks = window.getTasks().filter(t => t.completed && (!t.completedAt || (now - t.completedAt < 60 * 60 * 1000))).length;
                     }
 
                     // The proactive burnout will just show during 50 mins timer and above
