@@ -130,8 +130,7 @@ strong, b {
 /* ===== App Container ===== */
 .app-container {
     width: 100%;
-    max-width: 1400px;
-    padding: 2rem;
+    padding: 2rem 4rem;
     display: flex;
     flex-direction: row;
     gap: 3rem;
@@ -139,7 +138,7 @@ strong, b {
 }
 
 .app-container.wide {
-    max-width: 1400px;
+    width: 100%;
 }
 
 /* ===== Sidebar Header ===== */
