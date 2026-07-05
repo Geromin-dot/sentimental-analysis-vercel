@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Real-Time Text Analysis for Profanity/Frustration
     const profanityList = ['fuck', 'shit', 'bitch', 'asshole', 'damn', 'stupid', 'hate'];
-    const anxietyList = ['worried', 'anxious', 'scared', 'terrified', 'overwhelmed', 'nervous', 'failing'];
+    const anxietyList = ['worry', 'worried', 'stress', 'stressed', 'anxious', 'scared', 'terrified', 'overwhelmed', 'nervous', 'fail', 'failing'];
 
     inputField.addEventListener('input', (e) => {
         if (anomalyTriggered) return;
