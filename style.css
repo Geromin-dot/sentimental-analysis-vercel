@@ -150,7 +150,7 @@ header {
     position: sticky;
     top: 0;
     flex-shrink: 0;
-    background: linear-gradient(180deg, var(--primary-accent) 0%, #ffffff 100%);
+    background: linear-gradient(180deg, var(--primary-accent) 0%, var(--bg-color) 100%);
     padding: 2rem 1.75rem;
     box-sizing: border-box;
     border-right: 1px solid var(--glass-border);
