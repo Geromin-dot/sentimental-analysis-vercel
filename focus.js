@@ -80,6 +80,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (timeLeft > 0) {
                 timeLeft--;
                 updateTimerDisplay();
+
+                // 5-minute Active Presence Checker
+                if (!isBreak && timeLeft > 0 && timeLeft < totalTime && (totalTime - timeLeft) % 300 === 0) {
+                    clearInterval(timerInterval);
+                    timerRunning = false;
+                    startTimerBtn.textContent = 'Resume';
+                    playAlertSound();
+                    showAlertModal(
+                        "Are you still there?", 
+                        "The timer won't run if you aren't there! Please click Continue to resume your session."
+                    );
+                }
             } else {
                 clearInterval(timerInterval);
                 timerRunning = false;
@@ -577,36 +589,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ===== Distraction Tracking =====
-    let distractedWhileHidden = false;
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            if (timerRunning && !isBreak) {
-                // User left the tab during a focus session!
-                distractedWhileHidden = true;
-                
-                // 1. Reset timer
-                resetTimer();
-                
-                // 2. Play alarm
-                playCuteWarningSound();
+    // ===== Distraction Tracking Removed =====
 
-                // 3. Reset streak
-                const stats = loadFocusStats();
-                stats.streak = 0; 
-                saveFocusStats(stats);
-                updateStatsDisplay();
-            }
-        } else {
-            // User returned to the tab
-            if (distractedWhileHidden) {
-                distractedWhileHidden = false;
-                setTimeout(() => {
-                    showAlertModal("Distraction Detected", "You left the focus tab. Your timer and streak have been reset.");
-                }, 100);
-            }
-        }
-    });
 
     // ===== Initial Display =====
     updateTimerDisplay();
