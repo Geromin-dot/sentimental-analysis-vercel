@@ -546,6 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ===== Custom Audio Player =====
     const localAudioPlayer = document.getElementById('localAudioPlayer');
     const volumeSlider = document.getElementById('volumeSlider');
+    const audioTracks = document.querySelectorAll('.audio-track');
     const playPauseBtn = document.getElementById('audioPlayPauseBtn');
     const playIcon = document.getElementById('audioPlayIcon');
     const pauseIcon = document.getElementById('audioPauseIcon');
@@ -581,6 +582,19 @@ document.addEventListener('DOMContentLoaded', () => {
             currentTrackIndex = index;
             localAudioPlayer.src = playlist[index].src;
             nowPlayingText.textContent = `Now Playing: ${playlist[index].title}`;
+            
+            // Update list UI
+            if (audioTracks) {
+                audioTracks.forEach(t => {
+                    t.classList.remove('playing');
+                    t.querySelector('.track-status').textContent = 'Play';
+                });
+                if (audioTracks[index]) {
+                    audioTracks[index].classList.add('playing');
+                    audioTracks[index].querySelector('.track-status').textContent = 'Playing';
+                }
+            }
+            
             localAudioPlayer.load();
         }
 
@@ -596,9 +610,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (localAudioPlayer.paused) {
                 playIcon.style.display = 'block';
                 pauseIcon.style.display = 'none';
+                if (audioTracks && audioTracks[currentTrackIndex]) {
+                    audioTracks[currentTrackIndex].querySelector('.track-status').textContent = 'Paused';
+                }
             } else {
                 playIcon.style.display = 'none';
                 pauseIcon.style.display = 'block';
+                if (audioTracks && audioTracks[currentTrackIndex]) {
+                    audioTracks[currentTrackIndex].querySelector('.track-status').textContent = 'Playing';
+                }
             }
         }
 
@@ -665,6 +685,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 localAudioPlayer.currentTime = (progressBar.value / 100) * localAudioPlayer.duration;
             }
         });
+        
+        // Track list clicks
+        if (audioTracks) {
+            audioTracks.forEach((track, index) => {
+                track.addEventListener('click', () => {
+                    if (currentTrackIndex === index) {
+                        togglePlayPause();
+                    } else {
+                        loadTrack(index);
+                        localAudioPlayer.play().catch(e => console.warn("Audio play blocked:", e));
+                    }
+                });
+            });
+        }
 
         // Initialize first track but don't play
         loadTrack(0);
