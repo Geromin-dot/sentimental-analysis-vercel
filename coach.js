@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const insightState = document.getElementById('insightState');
     
     const insightReason = document.getElementById('insightReason');
+    const coachRecommendation = document.getElementById('coachRecommendation');
     const clearInsightBtn = document.getElementById('clearInsightBtn');
 
     // Load insight from localStorage
@@ -16,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
             insightState.classList.remove('hidden');
 
             insightReason.textContent = data.reason;
+            if (coachRecommendation && data.actionPlan) {
+                coachRecommendation.textContent = data.actionPlan;
+            }
 
         } catch (e) {
             console.error("Error parsing telemetry data", e);

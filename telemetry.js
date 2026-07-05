@@ -52,6 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
             let anomalyReason = isProfanity 
                 ? `I'm sensing some strong frustration right now. It is completely okay to feel stuck or upset when studying.`
                 : `You seem to be expressing worry or anxiety. Remember that learning is a process, and you are doing your best.`;
+            
+            let actionPlan = isProfanity
+                ? "Frustration blocks learning. Walk away for exactly 5 minutes, do something completely unrelated, and come back with a clean slate."
+                : "When anxiety hits, your brain's fear center takes over. Try the 5-4-3-2-1 grounding exercise to bring your focus back to the present moment.";
 
             console.log("Telemetry Anomaly Triggered:", anomalyReason);
             
@@ -59,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const avgFlight = flightTimes.length ? flightTimes.reduce((a, b) => a + b, 0) / flightTimes.length : 0;
             const backspaceRatio = totalKeystrokes > 0 ? backspaceCount / totalKeystrokes : 0;
             
-            triggerTelemetryAlert(anomalyReason, avgDwell, avgFlight, backspaceRatio);
+            triggerTelemetryAlert(anomalyReason, actionPlan, avgDwell, avgFlight, backspaceRatio);
         }
     });
 
@@ -131,33 +135,39 @@ document.addEventListener('DOMContentLoaded', () => {
         // Anomaly logic
         let anomalyDetected = false;
         let anomalyReason = "";
+        let actionPlan = "";
 
         if (backspaceRatio > 0.45) { 
             anomalyDetected = true;
             anomalyReason = "It looks like you might be experiencing some cognitive friction or feeling stuck. That's completely normal when tackling difficult material.";
+            actionPlan = "Step away from the keyboard and try to explain the concept out loud to an imaginary person. If you're still stuck, break the task down into three much smaller, manageable steps.";
         } else if (avgFlight < 40) { 
             anomalyDetected = true;
             anomalyReason = "I'm sensing that you might be feeling overwhelmed or agitated right now. Don't worry, we can slow things down.";
+            actionPlan = "Close your eyes and take 5 deep, slow breaths. Disconnect from the screen for a moment to let your nervous system reset before continuing.";
         } else if (avgFlight < 80 && backspaceRatio > 0.20) { 
             anomalyDetected = true;
             anomalyReason = "You seem to be rushing and correcting yourself frequently. It might help to take a deep breath and reset your focus.";
+            actionPlan = "Slow your pace down slightly. Try to prioritize accuracy over speed for the next paragraph. Taking it slower will actually help you finish faster by reducing errors.";
         } else if (avgDwell > 350) { 
             anomalyDetected = true;
             anomalyReason = "You appear to be hesitating or experiencing mental fatigue. It's okay to take a step back and let your mind rest.";
+            actionPlan = "Your brain is telling you it's tired. Stand up, stretch your legs, and get a glass of water. A quick physical break will restore your cognitive energy.";
         }
 
         if (anomalyDetected) {
             anomalyTriggered = true;
             console.log("Telemetry Anomaly Triggered:", anomalyReason, { avgFlight, avgDwell, backspaceRatio });
-            triggerTelemetryAlert(anomalyReason, avgDwell, avgFlight, backspaceRatio);
+            triggerTelemetryAlert(anomalyReason, actionPlan, avgDwell, avgFlight, backspaceRatio);
         }
     }
 
-    function triggerTelemetryAlert(reason, dwell, flight, bsRatio) {
+    function triggerTelemetryAlert(reason, actionPlan, dwell, flight, bsRatio) {
         // Save to local storage for the Coach dashboard
         const telemetryData = {
             timestamp: new Date().toISOString(),
             reason: reason,
+            actionPlan: actionPlan || "We recommend pausing your current task. Take a 5-minute deep breathing break away from the screen before attempting to refocus.",
             metrics: {
                 dwellTime: Math.round(dwell),
                 flightTime: Math.round(flight),
@@ -190,10 +200,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (anomalyTriggered) return;
             anomalyTriggered = true;
             const anomalyReason = "Inactivity detected. Student appears paralyzed, stuck, or distracted without interacting.";
+            const actionPlan = "Are you stuck on a concept, or did you get distracted? Try writing down just one single word related to your task to break the paralysis. If you're completely lost, reach out for help.";
             console.log("Telemetry Anomaly Triggered:", anomalyReason);
             
             // Re-use the alert system to proactively reach out
-            triggerTelemetryAlert(anomalyReason, 0, 0, 0);
+            triggerTelemetryAlert(anomalyReason, actionPlan, 0, 0, 0);
             
             // Optionally update the toast text to be specific to inactivity
             const toast = document.getElementById('telemetryToast');
