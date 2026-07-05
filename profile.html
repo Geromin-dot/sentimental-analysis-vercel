@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iFocus | Analytics Dashboard</title>
-    <meta name="description" content="iFocus Interactive Analytics — distraction heatmap, emotional trendline, and focus correlations.">
+    <title>iFocus | Profile</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <div class="background-blobs">
@@ -34,12 +30,12 @@
             <nav class="nav-links">
                 <a href="command-center.html">Home</a>
                 <a href="index.html">Flashcards</a>
-                <a href="analytics.html" class="active">Analytics</a>
+                <a href="analytics.html">Analytics</a>
                 <a href="coach.html">AI Coach</a>
             </nav>
 
             <div class="sidebar-bottom">
-                <a href="profile.html" class="sidebar-action">
+                <a href="profile.html" class="sidebar-action active">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     Profile
                 </a>
@@ -54,67 +50,38 @@
             </div>
         </header>
 
-        <main>
-            <div style="margin-bottom: 1.5rem;">
-                <h2 style="font-size: 2rem;">Weekly Analytics Dashboard</h2>
-                <p class="subtitle" style="margin-bottom: 0;">Hover over charts to see exact correlations between stress spikes and focus hours.</p>
-            </div>
-
-            <!-- Stat Cards -->
-            <div class="analytics-grid">
-                <div class="stat-card">
-                    <div class="stat-value" id="totalFocusHours">12.5</div>
-                    <div class="stat-label">Focus Hours</div>
+        <main class="page-layout" style="display: flex; justify-content: center; align-items: flex-start; padding: 2rem;">
+            <div class="glass-panel profile-container" style="max-width: 600px; width: 100%;">
+                <div class="profile-header" style="margin-bottom: 2rem;">
+                    <h2 style="color: var(--primary-accent);">Profile</h2>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value" style="color: var(--success);" id="tasksCompleted">23</div>
-                    <div class="stat-label">Tasks Done</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" style="color: var(--warning);" id="avgDistractions">3.2</div>
-                    <div class="stat-label">Avg Distractions</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" style="color: var(--secondary-accent);" id="streakDays">5</div>
-                    <div class="stat-label">Day Streak</div>
-                </div>
-            </div>
-
-            <!-- Charts Row 1: Focus & Emotional Trendline -->
-            <div class="charts-row">
-                <div class="glass-panel">
-                    <h3 style="margin-bottom: 1rem;">Focus Hours (Weekly)</h3>
-                    <div class="chart-container">
-                        <canvas id="focusChart"></canvas>
+                <div class="profile-content" style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="avatar-wrapper" style="position: relative; margin-bottom: 1rem;">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex&backgroundColor=c0aede" alt="Avatar" class="profile-avatar" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                        <button class="edit-avatar-btn" style="position: absolute; bottom: 0; right: 0; background: var(--primary-accent); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                        </button>
                     </div>
-                </div>
-                <div class="glass-panel">
-                    <h3 style="margin-bottom: 1rem;">Emotional Trendline</h3>
-                    <div class="chart-container">
-                        <canvas id="emotionalChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts Row 2: Distraction Heatmap & Session Distribution -->
-            <div class="charts-row" style="margin-top: 2rem;">
-                <div class="glass-panel">
-                    <h3 style="margin-bottom: 1rem;">Distraction Heatmap</h3>
-                    <div class="chart-container">
-                        <canvas id="distractionChart"></canvas>
-                    </div>
-                </div>
-                <div class="glass-panel">
-                    <h3 style="margin-bottom: 1rem;">Study Session Types</h3>
-                    <div class="chart-container">
-                        <canvas id="sessionTypeChart"></canvas>
+                    <h3 class="profile-name" style="font-size: 1.5rem; color: var(--text-primary); margin-bottom: 2rem;">Alex Johnson</h3>
+                    
+                    <div class="profile-stats-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; width: 100%; border-top: 1px solid var(--glass-border); padding-top: 2rem;">
+                        <div class="profile-stat-box" style="text-align: center; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 12px;">
+                            <span class="stat-value" style="display: block; font-size: 1.8rem; font-weight: 700; color: var(--primary-accent);">124</span>
+                            <span class="stat-label" style="font-size: 0.85rem; color: var(--text-secondary);">Total Sessions</span>
+                        </div>
+                        <div class="profile-stat-box" style="text-align: center; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 12px;">
+                            <span class="stat-value" style="display: block; font-size: 1.8rem; font-weight: 700; color: var(--primary-accent);">42h</span>
+                            <span class="stat-label" style="font-size: 0.85rem; color: var(--text-secondary);">Focus Time</span>
+                        </div>
+                        <div class="profile-stat-box" style="text-align: center; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 12px;">
+                            <span class="stat-value" style="display: block; font-size: 1.8rem; font-weight: 700; color: var(--primary-accent);">15</span>
+                            <span class="stat-label" style="font-size: 0.85rem; color: var(--text-secondary);">Day Streak</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
-
-    <script src="analytics.js"></script>
     <script src="global-timer.js?v=2"></script>
 </body>
 </html>
