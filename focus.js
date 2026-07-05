@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateTimerDisplay();
 
                 // 5-minute Active Presence Checker
-                if (!isBreak && timeLeft > 0 && timeLeft < totalTime && (totalTime - timeLeft) % 300 === 0) {
+                if (!isBreak && timeLeft > 0 && timeLeft < totalTime && timeLeft % 300 === 0) {
                     clearInterval(timerInterval);
                     timerRunning = false;
                     startTimerBtn.textContent = 'Resume';
