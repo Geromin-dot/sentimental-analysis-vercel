@@ -458,7 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTimerDisplay();
         updateSessionDots();
         timerCircle.style.setProperty('--progress', '0%');
-        window.removeEventListener('beforeunload', exitPromptHandler);
+        saveTimerState();
     }
 
     startTimerBtn.addEventListener('click', startTimer);
@@ -491,6 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
             timerLabel.textContent = 'Focus Time';
             updateTimerDisplay();
             timerCircle.style.setProperty('--progress', '0%');
+            saveTimerState();
         });
     });
 
@@ -540,6 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateTimerDisplay();
             updateSessionDots();
             timerCircle.style.setProperty('--progress', '0%');
+            saveTimerState();
             
             customModal.classList.add('hidden');
         });
