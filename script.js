@@ -70,6 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h4 style="margin-right: 40px; word-break: break-word;">${col.name}</h4>
                 <span class="card-count">${col.cards.length} card${col.cards.length !== 1 ? 's' : ''}</span>
                 <p class="collection-date" style="margin-bottom: 1rem;">${new Date(col.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                <button class="btn-primary small study-collection-btn" data-index="${idx}" style="width: 100%; margin-bottom: 0.5rem;">
+                    Study Deck
+                </button>
                 <button class="btn-secondary small toggle-active-btn ${col.activated ? 'is-active' : ''}" data-index="${idx}">
                     <span class="default-text">${col.activated ? 'Activated' : 'Activate for Vault'}</span>
                     <span class="hover-text">Disable</span>
@@ -80,9 +83,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Attach click events to open a collection
         collectionsGrid.querySelectorAll('.collection-card').forEach(card => {
             card.addEventListener('click', (e) => {
-                if (e.target.closest('.delete-collection') || e.target.closest('.rename-collection') || e.target.closest('.toggle-active-btn')) return;
+                if (e.target.closest('.delete-collection') || e.target.closest('.rename-collection') || e.target.closest('.toggle-active-btn') || e.target.closest('.study-collection-btn')) return;
                 const idx = Number(card.dataset.index);
-                openCollection(idx);
+                openCollection(idx, false);
+            });
+        });
+
+        // Attach study events
+        collectionsGrid.querySelectorAll('.study-collection-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const idx = Number(btn.dataset.index);
+                openCollection(idx, true); // Shuffle when explicitly studying
             });
         });
 
@@ -151,12 +163,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function openCollection(index) {
+    function openCollection(index, shuffle = false) {
         const collections = getCollections();
         const col = collections[index];
         if (!col) return;
 
-        currentCards = col.cards;
+        currentCards = shuffle ? [...col.cards].sort(() => Math.random() - 0.5) : [...col.cards];
         currentDeckSaved = true;
         activeDeckTitle.textContent = col.name;
         saveDeckBtn.style.display = 'none';
