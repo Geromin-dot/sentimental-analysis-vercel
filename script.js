@@ -70,8 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h4 style="margin-right: 40px; word-break: break-word;">${col.name}</h4>
                 <span class="card-count">${col.cards.length} card${col.cards.length !== 1 ? 's' : ''}</span>
                 <p class="collection-date" style="margin-bottom: 1rem;">${new Date(col.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
-                <button class="btn-secondary small toggle-active-btn" data-index="${idx}" style="width: 100%; margin: 0; background: ${col.activated ? 'var(--primary-accent)' : 'var(--bg-surface)'}; color: ${col.activated ? 'white' : 'var(--text-primary)'}; border-color: ${col.activated ? 'var(--primary-accent)' : 'var(--glass-border)'};">
-                    ${col.activated ? 'Activated ✓' : 'Activate for Vault'}
+                <button class="btn-secondary small toggle-active-btn ${col.activated ? 'is-active' : ''}" data-index="${idx}">
+                    <span class="default-text">${col.activated ? 'Activated' : 'Activate for Vault'}</span>
+                    <span class="hover-text" style="display: none;">Disable</span>
                 </button>
             </div>
         `).join('');

@@ -1546,3 +1546,26 @@ textarea:focus {
 .shake-animation {
     animation: shake 0.4s ease-in-out;
 }
+
+/* ===== Toggle Active Button ===== */
+.toggle-active-btn {
+    width: 100%;
+    margin: 0;
+    transition: all 0.2s ease;
+}
+.toggle-active-btn.is-active {
+    background: var(--primary-accent);
+    color: white;
+    border-color: var(--primary-accent);
+}
+.toggle-active-btn.is-active:hover {
+    background: var(--error);
+    border-color: var(--error);
+    color: white;
+}
+.toggle-active-btn.is-active:hover .default-text {
+    display: none;
+}
+.toggle-active-btn.is-active:hover .hover-text {
+    display: inline;
+}
