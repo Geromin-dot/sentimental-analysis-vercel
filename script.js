@@ -65,29 +65,69 @@ document.addEventListener('DOMContentLoaded', () => {
             const total = col.cards.length;
             const mastered = col.cards.filter(c => c.needsReview === false).length;
             const percentage = total > 0 ? Math.round((mastered / total) * 100) : 0;
+            const createdDate = new Date(col.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
             
             return `
-            <div class="collection-card" data-index="${idx}" style="position: relative; border: ${col.activated ? '2px solid var(--primary-accent)' : '1px solid var(--glass-border)'}">
-                <div class="collection-actions">
-                    <button class="action-btn rename-collection" data-index="${idx}" title="Rename deck">&#9998;</button>
-                    <button class="action-btn delete-collection" data-index="${idx}" title="Delete deck">&times;</button>
+            <div class="collection-card" data-index="${idx}" style="position: relative; border: ${col.activated ? '2px solid var(--primary-accent)' : '1px solid var(--glass-border)'}; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; background: ${col.activated ? '#f4f8f4' : 'var(--glass-bg)'};">
+                
+                <!-- Header (Icon + Kebab) -->
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div style="background: #e8e2c8; color: #5a4b1c; width: 40px; height: 40px; border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg>
+                    </div>
+                    
+                    <div class="kebab-menu" style="position: relative; cursor: pointer; color: var(--text-secondary); padding: 0.25rem;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"></circle><circle cx="12" cy="5" r="2"></circle><circle cx="12" cy="19" r="2"></circle></svg>
+                        <div class="kebab-dropdown" style="display: none; position: absolute; right: 0; top: 100%; background: white; border: 1px solid var(--glass-border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 0.5rem; flex-direction: column; gap: 0.25rem; z-index: 10; min-width: 120px;">
+                            <button class="action-btn rename-collection" data-index="${idx}" style="text-align: left; padding: 0.5rem; background: none; border: none; cursor: pointer; border-radius: 4px; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-primary);">Rename</button>
+                            <button class="action-btn delete-collection" data-index="${idx}" style="text-align: left; padding: 0.5rem; background: none; border: none; cursor: pointer; border-radius: 4px; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #e53935;">Delete</button>
+                        </div>
+                    </div>
                 </div>
-                <h4 style="margin-right: 40px; word-break: break-word; margin-bottom: 0.5rem;">${col.name}</h4>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                    <span class="card-count" style="margin-bottom: 0;">${total} card${total !== 1 ? 's' : ''}</span>
-                    ${total > 0 ? `<span style="font-size: 0.75rem; font-weight: 600; color: ${percentage >= 80 ? '#4CAF50' : (percentage >= 50 ? '#FF9800' : 'var(--text-secondary)')}; background: rgba(0,0,0,0.04); padding: 2px 8px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">${percentage}% Mastered</span>` : ''}
+
+                <!-- Title and Stats -->
+                <div>
+                    <h3 style="margin-bottom: 0.25rem; font-size: 1.1rem; color: var(--text-primary); word-break: break-word;">${col.name}</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">${total} Cards • Created ${createdDate}</p>
                 </div>
-                <p class="collection-date" style="margin-bottom: 1rem;">${new Date(col.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
-                <button class="btn-primary small study-collection-btn" data-index="${idx}" style="width: 100%; margin-bottom: 0.5rem;">
-                    Study Deck
-                </button>
-                <button class="btn-secondary small toggle-active-btn ${col.activated ? 'is-active' : ''}" data-index="${idx}">
-                    <span class="default-text">${col.activated ? 'Activated' : 'Activate for Vault'}</span>
-                    <span class="hover-text">Disable</span>
-                </button>
+
+                <!-- Mastery Progress -->
+                <div style="display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.5rem;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-primary); font-weight: 500;">
+                        <span>Mastery</span>
+                        <span>${percentage}%</span>
+                    </div>
+                    <div style="width: 100%; height: 6px; background: rgba(0,0,0,0.08); border-radius: 3px; overflow: hidden;">
+                        <div style="width: ${percentage}%; height: 100%; background: var(--primary-accent); border-radius: 3px;"></div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
+                    <button class="btn-primary small study-collection-btn" data-index="${idx}" style="width: 100%;">
+                        Study Deck
+                    </button>
+                    <button class="btn-secondary small toggle-active-btn ${col.activated ? 'is-active' : ''}" data-index="${idx}">
+                        <span class="default-text">${col.activated ? 'Activated' : 'Activate for Vault'}</span>
+                        <span class="hover-text">Disable</span>
+                    </button>
+                </div>
             </div>
             `;
         }).join('');
+
+        // Handle kebab menu dropdowns
+        collectionsGrid.querySelectorAll('.kebab-menu').forEach(menu => {
+            menu.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Close others
+                collectionsGrid.querySelectorAll('.kebab-dropdown').forEach(d => {
+                    if (d !== menu.querySelector('.kebab-dropdown')) d.style.display = 'none';
+                });
+                const dropdown = menu.querySelector('.kebab-dropdown');
+                dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+            });
+        });
 
         // Attach click events to open a collection
         collectionsGrid.querySelectorAll('.collection-card').forEach(card => {
@@ -564,4 +604,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===== Initial render: show collections =====
     renderCollections();
+
+    // Handle global click to close kebab menus
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.kebab-menu')) {
+            document.querySelectorAll('.kebab-dropdown').forEach(d => {
+                d.style.display = 'none';
+            });
+        }
+    });
 });
