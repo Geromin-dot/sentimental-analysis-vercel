@@ -50,8 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (triggerWord) {
             anomalyTriggered = true;
             let anomalyReason = isProfanity 
-                ? `Frustration detected ("${triggerWord}"). Cursing indicates emotional flooding.`
-                : `Anxiety detected ("${triggerWord}"). User is expressing genuine fear or worry.`;
+                ? `I'm sensing some strong frustration right now. It is completely okay to feel stuck or upset when studying.`
+                : `You seem to be expressing worry or anxiety. Remember that learning is a process, and you are doing your best.`;
 
             console.log("Telemetry Anomaly Triggered:", anomalyReason);
             
@@ -134,16 +134,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (backspaceRatio > 0.45) { 
             anomalyDetected = true;
-            anomalyReason = "High deletion frequency detected. More than 45% of your keystrokes were backspaces, which strongly correlates with cognitive friction or frustration.";
+            anomalyReason = "It looks like you might be experiencing some cognitive friction or feeling stuck. That's completely normal when tackling difficult material.";
         } else if (avgFlight < 40) { 
             anomalyDetected = true;
-            anomalyReason = "Erratic typing cadence detected (Flight time: " + Math.round(avgFlight) + "ms). This hyper-velocity pattern indicates you are hitting multiple keys simultaneously, suggesting acute stress or agitation.";
+            anomalyReason = "I'm sensing that you might be feeling overwhelmed or agitated right now. Don't worry, we can slow things down.";
         } else if (avgFlight < 80 && backspaceRatio > 0.20) { 
             anomalyDetected = true;
-            anomalyReason = "Rushed, error-prone typing detected. A combination of very fast typing (Flight time: " + Math.round(avgFlight) + "ms) and high correction rate suggests you might be feeling overwhelmed.";
+            anomalyReason = "You seem to be rushing and correcting yourself frequently. It might help to take a deep breath and reset your focus.";
         } else if (avgDwell > 350) { 
             anomalyDetected = true;
-            anomalyReason = "Heavy keystroke dwell time detected (" + Math.round(avgDwell) + "ms). Prolonged key-presses indicate hesitation, mental fatigue, or a distracted cognitive state.";
+            anomalyReason = "You appear to be hesitating or experiencing mental fatigue. It's okay to take a step back and let your mind rest.";
         }
 
         if (anomalyDetected) {
