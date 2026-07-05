@@ -144,7 +144,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // ===== Add Task =====
     function addTask() {
         const text = todoInput.value.trim();
-        if (!text) return;
+        if (!text) {
+            todoInput.classList.remove('shake-animation');
+            void todoInput.offsetWidth; // Trigger reflow
+            todoInput.classList.add('shake-animation');
+            todoInput.focus();
+            return;
+        }
 
         const newTask = {
             id: Date.now(),
