@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p class="collection-date" style="margin-bottom: 1rem;">${new Date(col.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                 <button class="btn-secondary small toggle-active-btn ${col.activated ? 'is-active' : ''}" data-index="${idx}">
                     <span class="default-text">${col.activated ? 'Activated' : 'Activate for Vault'}</span>
-                    <span class="hover-text" style="display: none;">Disable</span>
+                    <span class="hover-text">Disable</span>
                 </button>
             </div>
         `).join('');
