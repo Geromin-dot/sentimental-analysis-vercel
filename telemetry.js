@@ -73,13 +73,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Ignore modifier keys to prevent artificial 0ms flight times
         const ignoredKeys = ['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab'];
         if (ignoredKeys.includes(e.key)) return;
+        
+        // Completely ignore auto-repeat keydowns to avoid false positives
+        if (e.repeat) return;
 
         const now = performance.now();
-        
-        // Don't track if they hold down a key (autorepeat)
-        if (!e.repeat) {
-            keydownTimes[e.code] = now;
-        }
+        keydownTimes[e.code] = now;
 
         if (e.key === 'Backspace' || e.key === 'Delete') {
             backspaceCount++;
