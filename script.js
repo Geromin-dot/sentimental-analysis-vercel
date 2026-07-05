@@ -79,8 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="kebab-menu" style="position: relative; cursor: pointer; color: var(--text-secondary); padding: 0.25rem;">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"></circle><circle cx="12" cy="5" r="2"></circle><circle cx="12" cy="19" r="2"></circle></svg>
                         <div class="kebab-dropdown" style="display: none; position: absolute; right: 0; top: 100%; background: white; border: 1px solid var(--glass-border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 0.5rem; flex-direction: column; gap: 0.25rem; z-index: 10; min-width: 120px;">
-                            <button class="action-btn rename-collection" data-index="${idx}" style="text-align: left; padding: 0.5rem; background: none; border: none; cursor: pointer; border-radius: 4px; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-primary);">Rename</button>
-                            <button class="action-btn delete-collection" data-index="${idx}" style="text-align: left; padding: 0.5rem; background: none; border: none; cursor: pointer; border-radius: 4px; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #e53935;">Delete</button>
+                            <button class="action-btn rename-collection" data-index="${idx}">Rename</button>
+                            <button class="action-btn delete-collection" data-index="${idx}">Delete</button>
                         </div>
                     </div>
                 </div>

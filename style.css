@@ -692,48 +692,36 @@ textarea:focus {
     opacity: 0.7;
 }
 
-.collection-card .collection-actions {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    display: flex;
-    gap: 0.5rem;
-    opacity: 0;
-    transition: all 0.2s ease;
-}
-
-.collection-card:hover .collection-actions {
-    opacity: 1;
-}
-
-.collection-card .action-btn {
+.kebab-dropdown button.action-btn {
+    width: 100%;
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    background: transparent;
     border: none;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
+    cursor: pointer;
+    border-radius: 6px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1.1rem;
-    transition: all 0.2s ease;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.2s ease;
 }
 
-.collection-card .rename-collection {
-    background: rgba(0, 0, 0, 0.05);
-    color: var(--text-secondary);
-}
-.collection-card .rename-collection:hover {
-    background: rgba(0, 0, 0, 0.15);
+.kebab-dropdown button.rename-collection {
     color: var(--text-primary);
 }
 
-.collection-card .delete-collection {
-    background: rgba(239, 68, 68, 0.15);
-    color: var(--error);
+.kebab-dropdown button.rename-collection:hover {
+    background: rgba(0, 0, 0, 0.05);
 }
-.collection-card .delete-collection:hover {
-    background: rgba(239, 68, 68, 0.3);
+
+.kebab-dropdown button.delete-collection {
+    color: #e53935;
+}
+
+.kebab-dropdown button.delete-collection:hover {
+    background: rgba(229, 57, 53, 0.1);
 }
 
 .empty-state {
