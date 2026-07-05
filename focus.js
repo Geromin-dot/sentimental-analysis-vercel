@@ -62,35 +62,79 @@ document.addEventListener('DOMContentLoaded', () => {
         timerCircle.style.setProperty('--progress', `${progress}%`);
     }
 
-    function startTimer() {
-        if (timerRunning) {
+    function saveTimerState() {
+        const state = {
+            isRunning: timerRunning,
+            targetEndTime: timerRunning ? Date.now() + (timeLeft * 1000) : null,
+            timeLeft: timeLeft,
+            isBreak: isBreak,
+            totalTime: totalTime,
+            workDuration: workDuration,
+            breakDuration: breakDuration,
+            completedSessions: completedSessions,
+            currentSession: currentSession,
+            currentSessionStartTime: currentSessionStartTime,
+            totalSessions: totalSessions
+        };
+        localStorage.setItem('ifocus_timer_state', JSON.stringify(state));
+    }
+
+    function loadTimerState() {
+        const saved = localStorage.getItem('ifocus_timer_state');
+        if (saved) {
+            const state = JSON.parse(saved);
+            isBreak = state.isBreak;
+            totalTime = state.totalTime;
+            workDuration = state.workDuration;
+            breakDuration = state.breakDuration || breakDuration;
+            completedSessions = state.completedSessions;
+            currentSession = state.currentSession;
+            currentSessionStartTime = state.currentSessionStartTime;
+            totalSessions = state.totalSessions || 4;
+            
+            if (state.isRunning && state.targetEndTime) {
+                timeLeft = Math.max(0, Math.floor((state.targetEndTime - Date.now()) / 1000));
+                updateTimerDisplay();
+                updateSessionDots();
+                startTimer(true);
+            } else {
+                timeLeft = state.timeLeft;
+                updateTimerDisplay();
+                updateSessionDots();
+            }
+        }
+    }
+
+    function startTimer(resumeSync = false) {
+        if (timerRunning && !resumeSync) {
             // Pause
             clearInterval(timerInterval);
             timerRunning = false;
             startTimerBtn.textContent = 'Resume';
+            saveTimerState();
             return;
         }
 
-        if (timeLeft === totalTime && !isBreak) {
+        if (!resumeSync && timeLeft === totalTime && !isBreak) {
             currentSessionStartTime = Date.now();
         }
 
         timerRunning = true;
         startTimerBtn.textContent = 'Pause';
-
-        // Enable exit prompting
-        window.addEventListener('beforeunload', exitPromptHandler);
+        saveTimerState();
 
         timerInterval = setInterval(() => {
             if (timeLeft > 0) {
                 timeLeft--;
                 updateTimerDisplay();
+                saveTimerState(); // save every second
 
                 // 5-minute Active Presence Checker
                 if (!isBreak && timeLeft > 0 && timeLeft < totalTime && timeLeft % 300 === 0) {
                     clearInterval(timerInterval);
                     timerRunning = false;
                     startTimerBtn.textContent = 'Resume';
+                    saveTimerState();
                     playAlertSound();
                     showAlertModal(
                         "Are you still there?", 
@@ -101,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(timerInterval);
                 timerRunning = false;
                 startTimerBtn.textContent = 'Start';
+                saveTimerState();
 
                 if (!isBreak) {
                     // Work session completed
@@ -145,7 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         completedSessions = 0;
                         currentSession = 1;
                         updateSessionDots();
-                        window.removeEventListener('beforeunload', exitPromptHandler);
                     } else {
                         // Switch to break
                         if (isBurnout) {
@@ -526,16 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionLabel.textContent = `Session ${Math.min(currentSession, totalSessions)} of ${totalSessions}`;
     }
 
-    // ===== Cross-Platform Exit Prompting =====
-    function exitPromptHandler(e) {
-        e.preventDefault();
-        e.returnValue = 'Leave site? Your Pomodoro session will be completely reset.';
-        
-        // Reset session on actual leave
-        resetTimer();
-        
-        return e.returnValue;
-    }
+    // Exit Prompt logic removed to allow cross-page navigation
 
     // ===== Save Session to Analytics History =====
     function saveSessionToHistory(minutes) {
@@ -748,4 +783,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTimerDisplay();
         setTimeout(() => showAlertModal(`AI Adjusted Timer: ${timerLabel.innerText}`, actionPlan || "Your timer and tasks have been adjusted."), 100);
     });
+
+    // ===== Sync Cross-Page Timer State =====
+    loadTimerState();
 });
