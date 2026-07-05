@@ -411,7 +411,8 @@ document.addEventListener('DOMContentLoaded', () => {
             CRITICAL INSTRUCTIONS: 
             1. The text may be extracted from a PDF and contain random line breaks, typos, or messy OCR formatting. You must intelligently ignore this messiness and extract the logical concepts.
             2. The "front" of the card MUST ONLY be the term, concept name, or short question. It MUST NOT contain the answer or definition itself. 
-            3. The "back" of the card MUST contain the core definition or answer. Distill it into a few short, punchy keywords or a concise summary. If the material contains an enumeration or list (e.g., types, steps, phases), format the back of the card as a numbered or bulleted list using newlines (\\n).
+            3. The "back" of the card MUST contain the core definition or answer. Distill it into a few short, punchy keywords or a concise summary.
+            4. GROUP ENUMERATIONS: If the material contains a list, enumeration, or sequence (e.g., "The main stages are..."), DO NOT split it into separate cards for each item. Create ONE single flashcard where the "front" asks for the list (e.g., "Main stages of Cellular Respiration") and the "back" contains the full enumerated list using newlines (\\n).
             
             Return the output STRICTLY as a JSON array of objects with this format. Do not use markdown blocks:
             [
