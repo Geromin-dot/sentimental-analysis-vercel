@@ -19,11 +19,27 @@ document.addEventListener('DOMContentLoaded', () => {
     timerDiv.style.zIndex = '9999';
     timerDiv.style.cursor = 'pointer';
     timerDiv.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+    timerDiv.style.animation = 'slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards';
     timerDiv.title = 'Click to return to your Focus Session';
     document.body.appendChild(timerDiv);
 
+    // Add keyframes for the slide-to-left animation
+    if (!document.getElementById('miniTimerStyles')) {
+        const style = document.createElement('style');
+        style.id = 'miniTimerStyles';
+        style.innerHTML = `
+            @keyframes slideInRight {
+                0% { transform: translateX(120%); opacity: 0; }
+                100% { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
     // Hover effect
     timerDiv.addEventListener('mouseenter', () => {
+        // We override transform, but since the animation finishes at translateX(0), 
+        // translating Y is perfectly fine.
         timerDiv.style.transform = 'translateY(-2px)';
         timerDiv.style.boxShadow = '0 16px 36px -10px rgba(0,0,0,0.2)';
     });
