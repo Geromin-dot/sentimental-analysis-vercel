@@ -78,6 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Check if they are holding down a key (auto-repeat)
         if (e.repeat) {
+            const ignoreRepeatKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+            if (ignoreRepeatKeys.includes(e.key)) return; // Normal to hold these down
+            
             if (keydownTimes[e.code]) {
                 const heldDuration = now - keydownTimes[e.code];
                 if (heldDuration > 1500) { // Held for more than 1.5 seconds
