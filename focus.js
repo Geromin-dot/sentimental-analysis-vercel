@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let totalSessions = 4;
     let completedSessions = 0;
     let currentSession = 1;
-    let sessionInitialCompletedTasks = 0;
 
     // ===== Focus Stats =====
     function loadFocusStats() {
@@ -74,13 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
         timerRunning = true;
         startTimerBtn.textContent = 'Pause';
 
-        // Capture initial completed tasks at the very start of a work session
-        if (!isBreak && timeLeft === totalTime) {
-            if (window.getTasks) {
-                sessionInitialCompletedTasks = window.getTasks().filter(t => t.completed).length;
-            }
-        }
-
         // Enable exit prompting
         window.addEventListener('beforeunload', exitPromptHandler);
 
@@ -112,12 +104,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (window.getTasks) {
                         currentCompletedTasks = window.getTasks().filter(t => t.completed).length;
                     }
-                    const tasksCompletedDuringSession = currentCompletedTasks - sessionInitialCompletedTasks;
 
                     // The proactive burnout will just show during 50 mins timer and above
                     // (workDuration >= 3000 means >= 50 mins. workDuration === 3 is for testing 3 seconds)
                     const isLongSession = workDuration >= (50 * 60) || workDuration === 3;
-                    const isBurnout = isLongSession && tasksCompletedDuringSession <= 0;
+                    const isBurnout = isLongSession && currentCompletedTasks === 0;
 
                     if (isBurnout) {
                         setTimeout(() => {

@@ -895,8 +895,8 @@ textarea:focus {
     border: none;
     color: var(--text-secondary);
     cursor: pointer;
-    opacity: 0;
-    transition: all 0.2s ease;
+    opacity: 0.4;
+    transition: opacity 0.2s ease, color 0.2s ease;
     padding: 4px;
 }
 
