@@ -22,9 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let timerInterval = null;
     let timerRunning = false;
     let isBreak = false;
-    let currentSession = 1;
     let totalSessions = 4;
     let completedSessions = 0;
+    let currentSession = 1;
+    let sessionInitialCompletedTasks = 0;
 
     // ===== Focus Stats =====
     function loadFocusStats() {
@@ -73,6 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
         timerRunning = true;
         startTimerBtn.textContent = 'Pause';
 
+        // Capture initial completed tasks at the very start of a work session
+        if (!isBreak && timeLeft === totalTime) {
+            if (window.getTasks) {
+                sessionInitialCompletedTasks = window.getTasks().filter(t => t.completed).length;
+            }
+        }
+
         // Enable exit prompting
         window.addEventListener('beforeunload', exitPromptHandler);
 
@@ -100,12 +108,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     saveSessionToHistory(workDuration / 60);
 
                     // --- NEW BURNOUT CHECK ---
-                    let completedTasks = 0;
+                    let currentCompletedTasks = 0;
                     if (window.getTasks) {
-                        completedTasks = window.getTasks().filter(t => t.completed).length;
+                        currentCompletedTasks = window.getTasks().filter(t => t.completed).length;
                     }
+                    const tasksCompletedDuringSession = currentCompletedTasks - sessionInitialCompletedTasks;
 
-                    const isBurnout = completedTasks === 0 && (workDuration >= 1500 || workDuration < 10);
+                    // The proactive burnout will just show during 50 mins timer and above
+                    // (workDuration >= 3000 means >= 50 mins. workDuration === 3 is for testing 3 seconds)
+                    const isLongSession = workDuration >= (50 * 60) || workDuration === 3;
+                    const isBurnout = isLongSession && tasksCompletedDuringSession <= 0;
+
                     if (isBurnout) {
                         setTimeout(() => {
                             showAlertModal(
@@ -443,8 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         saveCustomBtn.addEventListener('click', () => {
-            let wMin = parseInt(customWorkMin.value);
-            if (isNaN(wMin) || wMin < 15) wMin = 15; // Enforce minimum 15 mins
+            let wMin = parseInt(customWorkMin.value) || 0;
             let wSec = parseInt(customWorkSec.value) || 0;
             let bMin = parseInt(customBreakMin.value) || 0;
             let bSec = parseInt(customBreakSec.value) || 0;
