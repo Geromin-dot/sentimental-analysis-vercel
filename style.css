@@ -145,13 +145,13 @@ strong, b {
 header {
     display: flex;
     flex-direction: column;
-    width: 260px;
+    width: 290px;
     height: 100vh;
     position: sticky;
     top: 0;
     flex-shrink: 0;
-    background-color: var(--card-back);
-    padding: 2rem 1.5rem;
+    background-color: #dce3d6;
+    padding: 2rem 1.75rem;
     box-sizing: border-box;
     border-right: 1px solid var(--glass-border);
 }
