@@ -74,10 +74,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const ignoredKeys = ['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab'];
         if (ignoredKeys.includes(e.key)) return;
         
-        // Completely ignore auto-repeat keydowns to avoid false positives
-        if (e.repeat) return;
-
         const now = performance.now();
+
+        // Check if they are holding down a key (auto-repeat)
+        if (e.repeat) {
+            if (keydownTimes[e.code]) {
+                const heldDuration = now - keydownTimes[e.code];
+                if (heldDuration > 1500) { // Held for more than 1.5 seconds
+                    anomalyTriggered = true;
+                    const reason = "You seem to be holding down a key. This often indicates frustration or that you're zoning out.";
+                    const actionPlan = "Take your hands off the keyboard for a moment. Close your eyes, take a deep breath, and reset before you continue.";
+                    
+                    const avgDwell = dwellTimes.length ? dwellTimes.reduce((a, b) => a + b, 0) / dwellTimes.length : 0;
+                    const avgFlight = flightTimes.length ? flightTimes.reduce((a, b) => a + b, 0) / flightTimes.length : 0;
+                    const backspaceRatio = totalKeystrokes > 0 ? backspaceCount / totalKeystrokes : 0;
+                    
+                    triggerTelemetryAlert(reason, actionPlan, avgDwell, avgFlight, backspaceRatio);
+                }
+            }
+            return; // Ignore normal auto-repeats for standard telemetry metrics
+        }
+
         keydownTimes[e.code] = now;
 
         if (e.key === 'Backspace' || e.key === 'Delete') {
