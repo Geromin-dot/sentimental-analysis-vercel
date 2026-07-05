@@ -150,32 +150,33 @@ header {
     position: sticky;
     top: 0;
     flex-shrink: 0;
-    background-color: #dce3d6;
+    background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
     padding: 2rem 1.75rem;
     box-sizing: border-box;
-    border-right: 1px solid var(--glass-border);
+    border-right: none;
 }
 
 .logo {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    color: var(--primary-accent);
+    color: #ffffff;
     margin-bottom: 3rem;
 }
 
 .logo h1 {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: #ffffff;
     letter-spacing: -0.5px;
 }
 
 .logo .logo-accent {
-    background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    background: none;
+    -webkit-background-clip: border-box;
+    -webkit-text-fill-color: #ffffff;
+    background-clip: border-box;
+    color: #ffffff;
 }
 
 .nav-links {
@@ -185,7 +186,7 @@ header {
 }
 
 .nav-links a {
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.75);
     text-decoration: none;
     font-weight: 500;
     font-size: 1rem;
@@ -196,13 +197,13 @@ header {
 }
 
 .nav-links a:hover {
-    color: var(--text-primary);
-    background: rgba(0, 0, 0, 0.05);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .nav-links a.active {
-    color: var(--primary-accent);
-    background: rgba(95, 143, 94, 0.12);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.2);
     font-weight: 600;
 }
 
@@ -214,7 +215,7 @@ header {
 }
 
 .sidebar-bottom a {
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.75);
     text-decoration: none;
     font-weight: 500;
     font-size: 0.95rem;
@@ -227,16 +228,17 @@ header {
 }
 
 .sidebar-bottom a:hover {
-    color: var(--text-primary);
-    background: rgba(0, 0, 0, 0.05);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-bottom a.logout {
-    color: var(--error);
+    color: #ffb3b3;
 }
 
 .sidebar-bottom a.logout:hover {
-    background: rgba(224, 62, 62, 0.1);
+    background: rgba(224, 62, 62, 0.2);
+    color: #ffcccc;
 }
 
 main {
