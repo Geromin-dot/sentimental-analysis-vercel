@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let totalSessions = 4;
     let completedSessions = 0;
     let currentSession = 1;
+    let currentSessionStartTime = Date.now();
 
     // ===== Focus Stats =====
     function loadFocusStats() {
@@ -68,6 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
             timerRunning = false;
             startTimerBtn.textContent = 'Resume';
             return;
+        }
+
+        if (timeLeft === totalTime && !isBreak) {
+            currentSessionStartTime = Date.now();
         }
 
         timerRunning = true;
@@ -114,8 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // --- NEW BURNOUT CHECK ---
                     let recentCompletedTasks = 0;
                     if (window.getTasks) {
-                        const now = Date.now();
-                        recentCompletedTasks = window.getTasks().filter(t => t.completed && (!t.completedAt || (now - t.completedAt < 60 * 60 * 1000))).length;
+                        recentCompletedTasks = window.getTasks().filter(t => t.completed && t.completedAt && t.completedAt >= currentSessionStartTime).length;
                     }
 
                     // The proactive burnout will just show during 50 mins timer and above
