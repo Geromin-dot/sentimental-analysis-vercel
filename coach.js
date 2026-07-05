@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const insightReason = document.getElementById('insightReason');
     const coachRecommendation = document.getElementById('coachRecommendation');
-    const clearInsightBtn = document.getElementById('clearInsightBtn');
+    const returnHomeBtn = document.getElementById('returnHomeBtn');
 
     // Load insight from localStorage
     const storedInsight = localStorage.getItem('ifocus_telemetry_insight');
@@ -29,11 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
         insightState.classList.add('hidden');
     }
 
-    if (clearInsightBtn) {
-        clearInsightBtn.addEventListener('click', () => {
+    if (returnHomeBtn) {
+        returnHomeBtn.addEventListener('click', () => {
             localStorage.removeItem('ifocus_telemetry_insight');
-            noInsightState.classList.remove('hidden');
-            insightState.classList.add('hidden');
         });
     }
 });
