@@ -79,23 +79,33 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check if they are holding down a key (auto-repeat)
         if (e.repeat) {
             const ignoreRepeatKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-            if (ignoreRepeatKeys.includes(e.key)) return; // Normal to hold these down
             
-            if (keydownTimes[e.code]) {
-                const heldDuration = now - keydownTimes[e.code];
-                if (heldDuration > 1500) { // Held for more than 1.5 seconds
-                    anomalyTriggered = true;
-                    const reason = "You seem to be holding down a key. This often indicates frustration or that you're zoning out.";
-                    const actionPlan = "Take your hands off the keyboard for a moment. Close your eyes, take a deep breath, and reset before you continue.";
-                    
-                    const avgDwell = dwellTimes.length ? dwellTimes.reduce((a, b) => a + b, 0) / dwellTimes.length : 0;
-                    const avgFlight = flightTimes.length ? flightTimes.reduce((a, b) => a + b, 0) / flightTimes.length : 0;
-                    const backspaceRatio = totalKeystrokes > 0 ? backspaceCount / totalKeystrokes : 0;
-                    
-                    triggerTelemetryAlert(reason, actionPlan, avgDwell, avgFlight, backspaceRatio);
+            // Only trigger held-key anomaly for non-navigation/deletion keys
+            if (!ignoreRepeatKeys.includes(e.key)) {
+                if (keydownTimes[e.code]) {
+                    const heldDuration = now - keydownTimes[e.code];
+                    if (heldDuration > 1500) { // Held for more than 1.5 seconds
+                        anomalyTriggered = true;
+                        const reason = "You seem to be holding down a key. This often indicates frustration or that you're zoning out.";
+                        const actionPlan = "Take your hands off the keyboard for a moment. Close your eyes, take a deep breath, and reset before you continue.";
+                        
+                        const avgDwell = dwellTimes.length ? dwellTimes.reduce((a, b) => a + b, 0) / dwellTimes.length : 0;
+                        const avgFlight = flightTimes.length ? flightTimes.reduce((a, b) => a + b, 0) / flightTimes.length : 0;
+                        const backspaceRatio = totalKeystrokes > 0 ? backspaceCount / totalKeystrokes : 0;
+                        
+                        triggerTelemetryAlert(reason, actionPlan, avgDwell, avgFlight, backspaceRatio);
+                    }
                 }
             }
-            return; // Ignore normal auto-repeats for standard telemetry metrics
+
+            // Still count held down backspace/delete towards the backspace ratio!
+            if (e.key === 'Backspace' || e.key === 'Delete') {
+                backspaceCount++;
+                totalKeystrokes++;
+                checkAnomalies();
+            }
+
+            return; // Ignore normal auto-repeats for dwell time metrics
         }
 
         keydownTimes[e.code] = now;
