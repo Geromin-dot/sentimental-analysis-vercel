@@ -36,14 +36,14 @@ async function analyzeSentiment(text) {
     const taskListStr = currentTasks.map(t => `${t.id}: ${t.text} (Priority: ${t.priority})`).join('\n');
 
     // 1b. Fetch Telemetry Insight
-    let telemetryContext = "Typing Telemetry: Calm and focused (No cognitive friction detected).";
+    let telemetryContext = "Typing Telemetry: Not used for sentiment override.";
     const storedTelemetry = localStorage.getItem('ifocus_telemetry_insight');
     if (storedTelemetry) {
         try {
             const tel = JSON.parse(storedTelemetry);
             const tenMinsAgo = Date.now() - (10 * 60 * 1000);
             if (new Date(tel.timestamp).getTime() > tenMinsAgo) {
-                telemetryContext = `Typing Telemetry: Erratic. Flagged reason: ${tel.reason}`;
+                telemetryContext = `Typing Telemetry: Flagged reason: ${tel.reason}`;
             }
         } catch (e) { }
     }
@@ -62,21 +62,19 @@ Student has completed ${completedTasksCount} tasks today.
 ${telemetryContext}
 
 Your job is to do THREE things:
-1. Categorize the student's emotional state into EXACTLY ONE of the following FIVE categories: Stressed, Distracted, Motivated, Engaged, or Contradiction.
-   - ABSOLUTE STRICT RULE: If the student claims to be simply "Tired", "Lazy", or "Unproductive" to get out of work, BUT their Productivity Context shows they have completed 1 or more tasks today AND their Typing Telemetry is Calm, YOU HAVE CAUGHT THEM GAMING THE SYSTEM. YOU MUST classify their state as "Contradiction".
-   - HOWEVER, if they are expressing genuine anxiety/fear about a specific subject (like a Math exam), OR if their Typing Telemetry is "Erratic", you MUST believe they are genuinely stressed and classify their state as "Stressed", regardless of their completed tasks.
+1. Categorize the student's emotional state into EXACTLY ONE of the following FOUR categories: Stressed, Distracted, Motivated, or Engaged.
+   - We trust the student's own reflection. If they express they are feeling stressed, anxious, tired, or overwhelmed, classify them as "Stressed".
 2. Determine the optimal order for the tasks based on their reflection. Use these default rules:
    - Stressed: Quick Wins (Low effort/priority) first, High effort last.
    - Distracted: Keep original order.
-   - Motivated/Engaged/Contradiction: High effort first, Quick Wins last.
+   - Motivated/Engaged: High effort first, Quick Wins last.
 3. Write a thoughtful, personalized 2-3 sentence action plan. DO NOT just talk about task ordering or pomodoro timers. Give them GENUINE, highly specific psychological advice, cognitive behavioral strategies, or study techniques tailored to the EXACT subject or worry they mentioned (e.g., if they mention Math, give a real math-anxiety tip; if they mention exhaustion, give a real burnout tip).
-   - If State is "Contradiction", gently call them out: "You mentioned feeling stressed, but your typing is perfectly calm and you've already crushed ${completedTasksCount} tasks. You're doing great, don't sell yourself short! Let's tackle a high-priority task with a standard 25-minute block."
 
 Reply STRICTLY in valid JSON format like this, do not use markdown blocks, just the JSON:
 {
-  "state": "Contradiction",
+  "state": "Stressed",
   "orderedIds": [3, 1, 2],
-  "actionPlan": "You mentioned feeling stressed, but your typing is perfectly calm and you've already crushed 4 tasks. Let's tackle a high-priority task with a standard 25-minute block."
+  "actionPlan": "It's completely valid to feel exhausted. Let's take it easy and just knock out a small quick win to build momentum."
 }
 `;
 

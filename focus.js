@@ -443,7 +443,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         saveCustomBtn.addEventListener('click', () => {
-            let wMin = parseInt(customWorkMin.value) || 0;
+            let wMin = parseInt(customWorkMin.value);
+            if (isNaN(wMin) || wMin < 15) wMin = 15; // Enforce minimum 15 mins
             let wSec = parseInt(customWorkSec.value) || 0;
             let bMin = parseInt(customBreakMin.value) || 0;
             let bSec = parseInt(customBreakSec.value) || 0;
