@@ -44,18 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===== Render Tasks =====
     function renderTasks() {
-        // Auto-cleanup tasks completed more than 5 minutes ago
-        const now = Date.now();
-        let tasksChanged = false;
-        tasks = tasks.filter(task => {
-            if (task.completed && task.completedAt && (now - task.completedAt > 5 * 60 * 1000)) {
-                tasksChanged = true;
-                return false;
-            }
-            return true;
-        });
-        if (tasksChanged) saveTasks();
-
         todoList.innerHTML = '';
         
         const filtered = tasks.filter(task => {
@@ -221,21 +209,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===== Initial Render =====
     renderTasks();
-
-    // ===== Auto Cleanup Interval =====
-    // Periodically check and clean up tasks that have been completed for > 5 minutes
-    setInterval(() => {
-        const now = Date.now();
-        const originalLength = tasks.length;
-        tasks = tasks.filter(task => {
-            if (task.completed && task.completedAt && (now - task.completedAt > 5 * 60 * 1000)) {
-                return false;
-            }
-            return true;
-        });
-        if (tasks.length !== originalLength) {
-            saveTasks();
-            renderTasks();
-        }
-    }, 60000); // Check every minute
 });
