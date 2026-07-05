@@ -407,9 +407,12 @@ document.addEventListener('DOMContentLoaded', () => {
         isBreak = false;
         timeLeft = workDuration;
         totalTime = workDuration;
+        completedSessions = 0;
+        currentSession = 1;
         timerLabel.textContent = 'Focus Time';
         startTimerBtn.textContent = 'Start';
         updateTimerDisplay();
+        updateSessionDots();
         timerCircle.style.setProperty('--progress', '0%');
         window.removeEventListener('beforeunload', exitPromptHandler);
     }
