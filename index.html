@@ -131,18 +131,34 @@
                     </div>
                 </div>
                 
+                <div class="study-progress-container" style="margin-bottom: 1.5rem; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);">
+                        <span id="studyProgressText">Card 1 of 10</span>
+                        <span id="studyMasteredText" style="color: var(--success); font-weight: 500;">0 Mastered</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" id="studyProgressFill" style="width: 10%;"></div></div>
+                </div>
+
                 <div class="flashcard-container" id="flashcardContainer">
                     <!-- Cards will be injected here -->
                 </div>
 
-                <div class="deck-controls">
-                    <button id="prevCardBtn" class="icon-btn" disabled>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                    </button>
-                    <span id="cardCounter">1 / 10</span>
-                    <button id="nextCardBtn" class="icon-btn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </button>
+                <div class="deck-controls" style="flex-direction: column; gap: 1rem;">
+                    <!-- Navigation -->
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; width: 100%;">
+                        <button id="prevCardBtn" class="icon-btn" disabled>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        </button>
+                        <span id="cardCounter">1 / 10</span>
+                        <button id="nextCardBtn" class="icon-btn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </button>
+                    </div>
+                    <!-- Study Actions -->
+                    <div style="display: flex; gap: 1rem; width: 100%; max-width: 400px;">
+                        <button id="needsReviewBtn" class="btn-secondary" style="flex: 1;">Needs Review</button>
+                        <button id="masteredBtn" class="btn-primary" style="flex: 1; background: var(--success); border-color: var(--success);">Mastered</button>
+                    </div>
                 </div>
                 
                 <p class="hint">Click the card or press Space to flip. Use arrows to navigate.</p>

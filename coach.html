@@ -61,43 +61,36 @@
             </div>
 
             <div style="width: 100%; display: flex; justify-content: center;">
-                <div id="noInsightState" class="glass-panel" style="text-align: center; padding: 4rem 2rem; max-width: 600px; width: 100%;">
-                    <div class="ai-avatar pulse-animation" style="margin: 0 auto 2rem auto; width: 80px; height: 80px;">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 2v2"></path>
-                            <path d="M12 20v2"></path>
-                            <path d="M4.93 4.93l1.41 1.41"></path>
-                            <path d="M17.66 17.66l1.41 1.41"></path>
-                            <path d="M2 12h2"></path>
-                            <path d="M20 12h2"></path>
-                            <path d="M6.34 17.66l-1.41 1.41"></path>
-                            <path d="M19.07 4.93l-1.41 1.41"></path>
-                        </svg>
-                    </div>
-                    <h2 style="font-size: 2rem; margin-bottom: 1rem;">You're in the Zone</h2>
-                    <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6; max-width: 450px; margin: 0 auto;">I am silently observing your session. Keep up the fantastic focus! I will step in if you ever need guidance or a moment to reset.</p>
-                    <a href="command-center.html" class="btn-primary" style="display: inline-flex; text-decoration: none; margin-top: 2.5rem; padding: 0.75rem 2.5rem; width: auto;">Return to Command Center</a>
-                </div>
-
-                <div id="insightState" class="hidden glass-panel" style="text-align: center; padding: 4rem 2rem; max-width: 600px; width: 100%; border-color: var(--warning);">
-                    <div class="ai-avatar pulse-animation-warning" style="margin: 0 auto 2rem auto; width: 80px; height: 80px; background: linear-gradient(135deg, var(--warning), #f59e0b);">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                            <line x1="12" y1="9" x2="12" y2="13"></line>
-                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                        </svg>
-                    </div>
-                    <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--warning);">Coach Intervention</h2>
-                    <p id="insightReason" style="font-size: 1.2rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 2rem;"></p>
+                <div class="glass-panel" style="display: flex; flex-direction: column; height: 60vh; max-width: 800px; width: 100%; padding: 1.5rem; gap: 1rem;">
                     
-                    <div style="background: rgba(95, 143, 94, 0.05); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 2.5rem; border: 1px solid rgba(95, 143, 94, 0.2);">
-                        <h3 style="color: var(--primary-accent); margin-bottom: 0.5rem;">Action Plan</h3>
-                        <p id="coachRecommendation" style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">We recommend pausing your current task. Take a 5-minute deep breathing break away from the screen before attempting to refocus.</p>
+                    <!-- Chat History Area -->
+                    <div id="chatHistory" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; padding-right: 0.5rem;">
+                        <!-- AI Introduction Message -->
+                        <div class="chat-message ai-message" style="display: flex; gap: 1rem; align-items: flex-start;">
+                            <div class="ai-avatar" style="width: 40px; height: 40px; flex-shrink: 0;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2v2"></path>
+                                    <path d="M12 20v2"></path>
+                                    <path d="M4.93 4.93l1.41 1.41"></path>
+                                    <path d="M17.66 17.66l1.41 1.41"></path>
+                                    <path d="M2 12h2"></path>
+                                    <path d="M20 12h2"></path>
+                                    <path d="M6.34 17.66l-1.41 1.41"></path>
+                                    <path d="M19.07 4.93l-1.41 1.41"></path>
+                                </svg>
+                            </div>
+                            <div style="background: rgba(95, 143, 94, 0.1); border: 1px solid rgba(95, 143, 94, 0.2); padding: 1rem; border-radius: 12px; border-top-left-radius: 0; color: var(--text-primary); line-height: 1.5;">
+                                <p style="margin: 0;" id="coachIntroText">Hi! I am your AI Study Coach. I am silently observing your session to help you maintain fantastic focus. How can I help you today?</p>
+                            </div>
+                        </div>
                     </div>
 
-                    <div style="display: flex; gap: 1rem; justify-content: center;">
-                        <a id="returnHomeBtn" href="command-center.html" class="btn-primary" style="text-decoration: none; margin: 0; width: auto; padding: 0.75rem 2rem;">Return to Home</a>
+                    <!-- Chat Input Area -->
+                    <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--glass-border); padding-top: 1rem;">
+                        <input type="text" id="chatInput" placeholder="Ask your coach for advice, or talk about what's distracting you..." style="flex: 1; background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: 24px; padding: 0.75rem 1.25rem; font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--text-primary); outline: none;">
+                        <button id="sendChatBtn" class="btn-primary" style="border-radius: 24px; padding: 0.75rem 1.5rem; width: auto; margin: 0;">Send</button>
                     </div>
+
                 </div>
             </div>
         </main>
