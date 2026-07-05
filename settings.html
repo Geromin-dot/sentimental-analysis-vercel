@@ -23,8 +23,14 @@
 
         .settings-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
+        }
+
+        @media (max-width: 1200px) {
+            .settings-list {
+                grid-template-columns: 1fr;
+            }
         }
 
         .settings-item {
