@@ -130,10 +130,10 @@ strong, b {
 /* ===== App Container ===== */
 .app-container {
     width: 100%;
-    padding: 2rem 4rem;
+    padding: 0;
     display: flex;
     flex-direction: row;
-    gap: 3rem;
+    gap: 0;
     align-items: flex-start;
 }
 
@@ -146,18 +146,14 @@ header {
     display: flex;
     flex-direction: column;
     width: 260px;
-    height: calc(100vh - 4rem);
+    height: 100vh;
     position: sticky;
-    top: 2rem;
+    top: 0;
     flex-shrink: 0;
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-xl);
+    background-color: var(--card-back);
     padding: 2rem 1.5rem;
-    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
     box-sizing: border-box;
+    border-right: 1px solid var(--glass-border);
 }
 
 .logo {
@@ -246,6 +242,7 @@ header {
 main {
     flex: 1;
     min-width: 0; /* Prevents flex children from overflowing */
+    padding: 2rem 4rem;
 }
 
 /* ===== Glassmorphism Panels ===== */
