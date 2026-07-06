@@ -514,18 +514,24 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderCard() {
         const cardData = currentCards[currentCardIndex];
         
+        const swapToggle = document.getElementById('swapFrontBackToggle');
+        const isSwapped = swapToggle ? swapToggle.checked : false;
+
+        const frontText = isSwapped ? cardData.back : cardData.front;
+        const backText = isSwapped ? cardData.front : cardData.back;
+
         flashcardContainer.innerHTML = `
             <div class="flashcard" id="currentCard">
                 <div class="card-face card-front">
                     <span class="tag">${cardData.tag || 'Flashcard'}</span>
-                    <div class="card-content">${cardData.front}</div>
+                    <div class="card-content">${frontText}</div>
                     <div class="flip-hint">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
                         Click to flip
                     </div>
                 </div>
                 <div class="card-face card-back">
-                    <div class="card-content">${cardData.back}</div>
+                    <div class="card-content">${backText}</div>
                 </div>
             </div>
         `;
@@ -558,7 +564,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Keyboard navigation
+    const swapFrontBackToggle = document.getElementById('swapFrontBackToggle');
+    if (swapFrontBackToggle) {
+        swapFrontBackToggle.addEventListener('change', () => {
+            if (!deckSection.classList.contains('hidden') && currentCards.length > 0) {
+                renderCard();
+            }
+        });
+    }
+
+    // --- Keyboard Navigation ---
     document.addEventListener('keydown', (e) => {
         if (deckSection.classList.contains('hidden')) return;
         

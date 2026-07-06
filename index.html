@@ -125,7 +125,11 @@
             <div class="deck-section hidden" id="deckSection">
                 <div class="deck-header">
                     <h2 id="activeDeckTitle">Your Custom Deck</h2>
-                    <div style="display: flex; gap: 0.75rem;">
+                    <div style="display: flex; gap: 0.75rem; align-items: center;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); cursor: pointer; margin-right: 1rem;">
+                            <input type="checkbox" id="swapFrontBackToggle" style="accent-color: var(--primary);">
+                            Definition First
+                        </label>
                         <button id="saveDeckBtn" class="btn-secondary small" style="background: rgba(16, 185, 129, 0.15); border-color: var(--success); color: var(--success);">Save to Collections</button>
                         <button id="newDeckBtn" class="btn-secondary small">Back</button>
                     </div>

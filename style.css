@@ -587,6 +587,7 @@ textarea:focus {
     padding: 0.5rem;
     scrollbar-width: thin;
     scrollbar-color: var(--primary-accent) transparent;
+    text-align: center;
 }
 
 .card-content::-webkit-scrollbar {
@@ -601,7 +602,7 @@ textarea:focus {
     font-size: 1.2rem;
     color: var(--text-primary);
     white-space: pre-wrap;
-    text-align: left;
+    text-align: center;
 }
 
 .flip-hint {
