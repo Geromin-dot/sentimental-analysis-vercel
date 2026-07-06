@@ -22,14 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevCardBtn = document.getElementById('prevCardBtn');
     const nextCardBtn = document.getElementById('nextCardBtn');
     const cardCounter = document.getElementById('cardCounter');
-    
-    // Study Mode UI
-    const needsReviewBtn = document.getElementById('needsReviewBtn');
-    const masteredBtn = document.getElementById('masteredBtn');
-    const studyProgressText = document.getElementById('studyProgressText');
-    const studyMasteredText = document.getElementById('studyMasteredText');
-    const studyProgressFill = document.getElementById('studyProgressFill');
-    
     const newDeckBtn = document.getElementById('newDeckBtn');
     const saveDeckBtn = document.getElementById('saveDeckBtn');
     const deckNameInput = document.getElementById('deckNameInput');
@@ -524,10 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         flashcardContainer.innerHTML = `
             <div class="flashcard" id="currentCard">
-                <div class="card-face card-front" style="position: relative;">
-                    <div style="position: absolute; top: 1rem; right: 1rem; color: var(--text-secondary); cursor: pointer;" title="Options">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
-                    </div>
+                <div class="card-face card-front">
                     <span class="tag">${cardData.tag || 'Flashcard'}</span>
                     <div class="card-content">${cardData.front}</div>
                     <div class="flip-hint">
@@ -548,19 +537,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateControls() {
+        cardCounter.textContent = `${currentCardIndex + 1} / ${currentCards.length}`;
         prevCardBtn.disabled = currentCardIndex === 0;
         nextCardBtn.disabled = currentCardIndex === currentCards.length - 1;
-        cardCounter.textContent = `${currentCardIndex + 1} / ${currentCards.length}`;
-        
-        // Update Study Progress
-        if (studyProgressText && studyProgressFill) {
-            studyProgressText.textContent = `Card ${currentCardIndex + 1} of ${currentCards.length}`;
-            const masteredCount = currentCards.filter(c => c.mastered).length;
-            studyMasteredText.textContent = `${masteredCount} Mastered`;
-            
-            const progressPct = currentCards.length === 0 ? 0 : Math.round((masteredCount / currentCards.length) * 100);
-            studyProgressFill.style.width = `${progressPct}%`;
-        }
     }
 
     prevCardBtn.addEventListener('click', () => {
@@ -593,27 +572,6 @@ document.addEventListener('DOMContentLoaded', () => {
             prevCardBtn.click();
         }
     });
-
-    if (needsReviewBtn) {
-        needsReviewBtn.addEventListener('click', () => {
-            if (currentCardIndex < currentCards.length - 1) {
-                currentCardIndex++;
-                renderCard();
-                updateControls();
-            }
-        });
-    }
-
-    if (masteredBtn) {
-        masteredBtn.addEventListener('click', () => {
-            currentCards[currentCardIndex].mastered = true;
-            if (currentCardIndex < currentCards.length - 1) {
-                currentCardIndex++;
-            }
-            renderCard();
-            updateControls();
-        });
-    }
 
     // ===== Save Deck to Collections =====
     saveDeckBtn.addEventListener('click', () => {
