@@ -584,12 +584,6 @@ document.addEventListener('DOMContentLoaded', () => {
             currentCardIndex = 0;
         }
         
-        const masteredCount = currentCards.filter(c => c.needsReview === false).length;
-        if (masteredCount === currentCards.length) {
-            const modal = document.getElementById('masteredModal');
-            if (modal) modal.classList.remove('hidden');
-        }
-        
         renderCard();
         updateControls();
     }
@@ -615,7 +609,14 @@ document.addEventListener('DOMContentLoaded', () => {
         needsReviewBtn.addEventListener('click', () => {
             currentCards[currentCardIndex].needsReview = true;
             autoSaveCurrentDeck();
-            moveToNextCard();
+            
+            const cardFaces = document.querySelectorAll('#currentCard .card-face');
+            cardFaces.forEach(face => {
+                face.classList.remove('mastered-green');
+                face.classList.add('review-red');
+            });
+            
+            updateControls();
         });
     }
 
@@ -623,7 +624,20 @@ document.addEventListener('DOMContentLoaded', () => {
         gotItBtn.addEventListener('click', () => {
             currentCards[currentCardIndex].needsReview = false;
             autoSaveCurrentDeck();
-            moveToNextCard();
+            
+            const cardFaces = document.querySelectorAll('#currentCard .card-face');
+            cardFaces.forEach(face => {
+                face.classList.remove('review-red');
+                face.classList.add('mastered-green');
+            });
+            
+            updateControls();
+            
+            const masteredCount = currentCards.filter(c => c.needsReview === false).length;
+            if (masteredCount === currentCards.length && currentCards.length > 0) {
+                const modal = document.getElementById('masteredModal');
+                if (modal) modal.classList.remove('hidden');
+            }
         });
     }
 
