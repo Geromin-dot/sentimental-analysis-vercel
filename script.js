@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressFill = document.getElementById('progressFill');
     const flashcardContainer = document.getElementById('flashcardContainer');
     
+    const prevCardBtn = document.getElementById('prevCardBtn');
+    const nextCardBtn = document.getElementById('nextCardBtn');
+    const cardCounter = document.getElementById('cardCounter');
     const needsReviewBtn = document.getElementById('needsReviewBtn');
     const gotItBtn = document.getElementById('gotItBtn');
     const masteryProgressText = document.getElementById('masteryProgressText');
@@ -556,6 +559,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const percent = totalCount === 0 ? 0 : (masteredCount / totalCount) * 100;
             masteryProgressBar.style.width = `${percent}%`;
         }
+        
+        if (cardCounter) {
+            cardCounter.textContent = `${currentCardIndex + 1} / ${currentCards.length}`;
+        }
+        if (prevCardBtn) {
+            prevCardBtn.disabled = currentCardIndex === 0;
+        }
+        if (nextCardBtn) {
+            nextCardBtn.disabled = currentCardIndex === currentCards.length - 1;
+        }
     }
 
     function moveToNextCard() {
@@ -617,6 +630,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    if (prevCardBtn) {
+        prevCardBtn.addEventListener('click', () => {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                renderCard();
+                updateControls();
+            }
+        });
+    }
+
+    if (nextCardBtn) {
+        nextCardBtn.addEventListener('click', () => {
+            if (currentCardIndex < currentCards.length - 1) {
+                currentCardIndex++;
+                renderCard();
+                updateControls();
+            }
+        });
+    }
+
     const swapFrontBackToggle = document.getElementById('swapFrontBackToggle');
     if (swapFrontBackToggle) {
         swapFrontBackToggle.addEventListener('change', () => {
@@ -634,10 +667,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.code === 'Space') {
             e.preventDefault();
             if (cardEl) cardEl.classList.toggle('flipped');
-        } else if (e.code === 'ArrowRight' && gotItBtn) {
-            gotItBtn.click();
-        } else if (e.code === 'ArrowLeft' && needsReviewBtn) {
-            needsReviewBtn.click();
+        } else if (e.code === 'ArrowRight' && nextCardBtn && !nextCardBtn.disabled) {
+            nextCardBtn.click();
+        } else if (e.code === 'ArrowLeft' && prevCardBtn && !prevCardBtn.disabled) {
+            prevCardBtn.click();
         }
     });
 
