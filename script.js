@@ -525,10 +525,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const frontText = isSwapped ? cardData.back : cardData.front;
         const backText = isSwapped ? cardData.front : cardData.back;
+        
+        let outlineClass = '';
+        if (cardData.needsReview === true) outlineClass = 'review-red';
+        if (cardData.needsReview === false) outlineClass = 'mastered-green';
 
         flashcardContainer.innerHTML = `
             <div class="flashcard" id="currentCard">
-                <div class="card-face card-front">
+                <div class="card-face card-front ${outlineClass}">
                     <span class="tag">${cardData.tag || 'Flashcard'}</span>
                     <div class="card-content">${frontText}</div>
                     <div class="flip-hint">
@@ -536,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         Click to flip
                     </div>
                 </div>
-                <div class="card-face card-back">
+                <div class="card-face card-back ${outlineClass}">
                     <div class="card-content">${backText}</div>
                 </div>
             </div>
@@ -574,37 +578,20 @@ document.addEventListener('DOMContentLoaded', () => {
     function moveToNextCard() {
         if (currentCards.length === 0) return;
         
-        let foundUnmastered = false;
-        // Search forward for next unmastered card
-        for (let i = currentCardIndex + 1; i < currentCards.length; i++) {
-            if (currentCards[i].needsReview !== false) {
-                currentCardIndex = i;
-                foundUnmastered = true;
-                break;
-            }
+        if (currentCardIndex < currentCards.length - 1) {
+            currentCardIndex++;
+        } else {
+            currentCardIndex = 0;
         }
         
-        // If not found, loop back to beginning
-        if (!foundUnmastered) {
-            for (let i = 0; i <= currentCardIndex; i++) {
-                if (currentCards[i].needsReview !== false) {
-                    currentCardIndex = i;
-                    foundUnmastered = true;
-                    break;
-                }
-            }
-        }
-        
-        if (!foundUnmastered) {
-            // All mastered!
+        const masteredCount = currentCards.filter(c => c.needsReview === false).length;
+        if (masteredCount === currentCards.length) {
             const modal = document.getElementById('masteredModal');
             if (modal) modal.classList.remove('hidden');
-            renderCard();
-            updateControls();
-        } else {
-            renderCard();
-            updateControls();
         }
+        
+        renderCard();
+        updateControls();
     }
 
     function autoSaveCurrentDeck() {

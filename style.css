@@ -1568,3 +1568,13 @@ textarea:focus {
 .toggle-active-btn.is-active:hover .hover-text {
     display: inline;
 }
+
+.card-face.review-red {
+    border: 2px solid rgba(239, 68, 68, 0.5);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
+}
+
+.card-face.mastered-green {
+    border: 2px solid rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
+}
