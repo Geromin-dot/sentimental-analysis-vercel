@@ -461,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveTimerState();
     }
 
-    startTimerBtn.addEventListener('click', startTimer);
+    startTimerBtn.addEventListener('click', () => startTimer());
     resetTimerBtn.addEventListener('click', resetTimer);
 
     // ===== Presets =====
