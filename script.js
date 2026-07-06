@@ -597,7 +597,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (!foundUnmastered) {
             // All mastered!
-            alert("Congratulations! You've mastered all the cards in this deck.");
+            const modal = document.getElementById('masteredModal');
+            if (modal) modal.classList.remove('hidden');
+            renderCard();
+            updateControls();
         } else {
             renderCard();
             updateControls();
@@ -612,6 +615,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 saveCollections(collections);
             }
         }
+    }
+
+    const closeMasteredModalBtn = document.getElementById('closeMasteredModalBtn');
+    if (closeMasteredModalBtn) {
+        closeMasteredModalBtn.addEventListener('click', () => {
+            document.getElementById('masteredModal').classList.add('hidden');
+        });
     }
 
     if (needsReviewBtn) {
