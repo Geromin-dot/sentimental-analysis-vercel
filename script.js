@@ -19,9 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressFill = document.getElementById('progressFill');
     const flashcardContainer = document.getElementById('flashcardContainer');
     
-    const prevCardBtn = document.getElementById('prevCardBtn');
-    const nextCardBtn = document.getElementById('nextCardBtn');
-    const cardCounter = document.getElementById('cardCounter');
+    const needsReviewBtn = document.getElementById('needsReviewBtn');
+    const gotItBtn = document.getElementById('gotItBtn');
+    const masteryProgressText = document.getElementById('masteryProgressText');
+    const masteryProgressBar = document.getElementById('masteryProgressBar');
     const newDeckBtn = document.getElementById('newDeckBtn');
     const saveDeckBtn = document.getElementById('saveDeckBtn');
     const deckNameInput = document.getElementById('deckNameInput');
@@ -32,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentCards = [];
     let currentCardIndex = 0;
     let currentDeckSaved = false;
+    let currentDeckIndex = -1;
 
     // ===== Collections Management =====
     function getCollections() {
@@ -217,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const col = collections[index];
         if (!col) return;
 
+        currentDeckIndex = index;
         currentCards = shuffle ? [...col.cards].sort(() => Math.random() - 0.5) : [...col.cards];
         currentDeckSaved = true;
         activeDeckTitle.textContent = col.name;
@@ -543,26 +546,76 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateControls() {
-        cardCounter.textContent = `${currentCardIndex + 1} / ${currentCards.length}`;
-        prevCardBtn.disabled = currentCardIndex === 0;
-        nextCardBtn.disabled = currentCardIndex === currentCards.length - 1;
+        const masteredCount = currentCards.filter(c => c.needsReview === false).length;
+        const totalCount = currentCards.length;
+        
+        if (masteryProgressText) {
+            masteryProgressText.textContent = `${masteredCount} / ${totalCount} Mastered`;
+        }
+        if (masteryProgressBar) {
+            const percent = totalCount === 0 ? 0 : (masteredCount / totalCount) * 100;
+            masteryProgressBar.style.width = `${percent}%`;
+        }
     }
 
-    prevCardBtn.addEventListener('click', () => {
-        if (currentCardIndex > 0) {
-            currentCardIndex--;
+    function moveToNextCard() {
+        if (currentCards.length === 0) return;
+        
+        let foundUnmastered = false;
+        // Search forward for next unmastered card
+        for (let i = currentCardIndex + 1; i < currentCards.length; i++) {
+            if (currentCards[i].needsReview !== false) {
+                currentCardIndex = i;
+                foundUnmastered = true;
+                break;
+            }
+        }
+        
+        // If not found, loop back to beginning
+        if (!foundUnmastered) {
+            for (let i = 0; i <= currentCardIndex; i++) {
+                if (currentCards[i].needsReview !== false) {
+                    currentCardIndex = i;
+                    foundUnmastered = true;
+                    break;
+                }
+            }
+        }
+        
+        if (!foundUnmastered) {
+            // All mastered!
+            alert("Congratulations! You've mastered all the cards in this deck.");
+        } else {
             renderCard();
             updateControls();
         }
-    });
+    }
 
-    nextCardBtn.addEventListener('click', () => {
-        if (currentCardIndex < currentCards.length - 1) {
-            currentCardIndex++;
-            renderCard();
-            updateControls();
+    function autoSaveCurrentDeck() {
+        if (currentDeckIndex !== -1 && currentDeckSaved) {
+            const collections = getCollections();
+            if (collections[currentDeckIndex]) {
+                collections[currentDeckIndex].cards = currentCards;
+                saveCollections(collections);
+            }
         }
-    });
+    }
+
+    if (needsReviewBtn) {
+        needsReviewBtn.addEventListener('click', () => {
+            currentCards[currentCardIndex].needsReview = true;
+            autoSaveCurrentDeck();
+            moveToNextCard();
+        });
+    }
+
+    if (gotItBtn) {
+        gotItBtn.addEventListener('click', () => {
+            currentCards[currentCardIndex].needsReview = false;
+            autoSaveCurrentDeck();
+            moveToNextCard();
+        });
+    }
 
     const swapFrontBackToggle = document.getElementById('swapFrontBackToggle');
     if (swapFrontBackToggle) {
@@ -577,14 +630,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => {
         if (deckSection.classList.contains('hidden')) return;
         
+        const cardEl = document.getElementById('currentCard');
         if (e.code === 'Space') {
             e.preventDefault();
-            const cardEl = document.getElementById('currentCard');
             if (cardEl) cardEl.classList.toggle('flipped');
-        } else if (e.code === 'ArrowRight' && !nextCardBtn.disabled) {
-            nextCardBtn.click();
-        } else if (e.code === 'ArrowLeft' && !prevCardBtn.disabled) {
-            prevCardBtn.click();
+        } else if (e.code === 'ArrowRight' && gotItBtn) {
+            gotItBtn.click();
+        } else if (e.code === 'ArrowLeft' && needsReviewBtn) {
+            needsReviewBtn.click();
         }
     });
 
@@ -600,8 +653,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         saveCollections(collections);
         currentDeckSaved = true;
+        currentDeckIndex = 0;
         saveDeckBtn.textContent = 'Saved!';
         saveDeckBtn.style.borderColor = 'var(--success)';
+        saveDeckBtn.style.background = 'rgba(16, 185, 129, 0.15)';
         saveDeckBtn.style.color = 'var(--success)';
         setTimeout(() => {
             saveDeckBtn.innerHTML = 'Save to Collections';
